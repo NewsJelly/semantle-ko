@@ -22,7 +22,7 @@ if __name__ == '__main__':
     known_words = set(json.load(open('data/dictionary.json')).keys())
     print("# words in dictionary:", len(known_words))
     valid_nearest = [w for w in original_data.dict.keys() if w in known_words]
-    valid_nearest_mat = np.matrix([original_data.dict[w] for w in valid_nearest])
+    valid_nearest_mat = np.array([original_data.dict[w] for w in valid_nearest])
     print("valid nearest shape:", valid_nearest_mat.shape)
     with open('data/valid_nearest.dat', 'wb') as f:
         pickle.dump((valid_nearest, valid_nearest_mat), f)

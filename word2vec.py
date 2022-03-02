@@ -1,5 +1,4 @@
-import heapq
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, Optional
 
 from numpy import array
 from numpy.linalg import norm
@@ -8,13 +7,6 @@ from numpy.linalg import norm
 class Word2VecDb:
     def __init__(self, path: str):
         self.dict = load_db(path)
-
-    # todo: replace with numpy matrix stuff
-    # dists = vecmat.dot(example_vec) / (np.linalg.norm(vecmat, axis = 1) * np.linalg.norm(example_vec))
-    def most_similar(self, word: str, n: int) -> List[Tuple[str, float]]:
-        vec = self.dict[word]
-        sims = [(k, cosine_similarity(vec, self.dict[k])) for k, v in self.dict.items()]
-        return heapq.nlargest(n, sims, key=lambda x: x[1])
 
     def similarity(self, word1: str, word2: str) -> Optional[float]:
         try:

@@ -1,5 +1,5 @@
-import json
 import pickle
+from typing import Set
 
 import numpy as np
 
@@ -16,10 +16,21 @@ def valid_guess(s: str) -> bool:
         return False
 
 
+def load_dic(path: str) -> Set[str]:
+    rtn = set()
+    letters = set(c for c in 'abcdefghijklmnopqrstuvwxyzäöǘß')
+    with open(path, 'r', encoding='utf-16') as f:
+        for line in f.readlines():
+            low = line.strip().lower()
+            if all(c in letters for c in low):
+                rtn.add(low)
+    return rtn
+
+
 if __name__ == '__main__':
     original_data = Word2VecDb('data/COW.token.wang2vec')
     print("original # words:", len(original_data.dict))
-    known_words = set(json.load(open('data/dictionary.json')).keys())
+    known_words = load_dic('data/de.dic')
     print("# words in dictionary:", len(known_words))
     valid_nearest = [w for w in original_data.dict.keys() if w in known_words]
     valid_nearest_mat = np.array([original_data.dict[w] for w in valid_nearest])

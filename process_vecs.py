@@ -16,14 +16,15 @@ def valid_guess(s: str) -> bool:
         return False
 
 
-def load_dic(path: str) -> Set[str]:
+def load_dic(path: str, allow_capitalization: bool = False) -> Set[str]:
     rtn = set()
     letters = set(c for c in 'abcdefghijklmnopqrstuvwxyzäöǘß')
+    start_idx = 1 if allow_capitalization else 0
     with open(path, 'r', encoding='utf-16') as f:
         for line in f.readlines():
-            low = line.strip().lower()
-            if all(c in letters for c in low):
-                rtn.add(low)
+            word = line.strip().lower() if not allow_capitalization else line.strip()
+            if all(c in letters for c in word[start_idx:]):
+                rtn.add(word)
     return rtn
 
 

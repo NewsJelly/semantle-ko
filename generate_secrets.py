@@ -39,7 +39,5 @@ if __name__ == '__main__':
     random.shuffle(shuffle_list)
     # note: need to remove old orthography (blaß, naß, gewiß)
     # what about names?
-    with open('static/assets/js/secretWords.js', 'w', encoding='utf-8') as f:
-        f.write("secretWords = [\n\"")
-        f.write('",\n"'.join(shuffle_list))
-        f.write('"\n]\n')
+    with open('data/secrets.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(shuffle_list))

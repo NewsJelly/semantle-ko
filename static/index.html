@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Semantle</title>
+    <script src="assets/js/secretWords.js?2"></script>
+    <script src="assets/js/semantle.js"></script>
+    <script src="assets/js/clipboard.js"></script>
+    <script src="assets/js/british_spellings.js"></script>
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="manifest" href="assets/site.webmanifest">
+    <!--
+
+    Copyright (c) 2022, David Turner <novalis@novalis.org>
+
+     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+  </head>
+  <body>
+    <header>
+      <h2>Semantle</h2>
+      <button aria-label="Rules" id="rules-button">?</button>
+    </header>
+    <div id="rules-underlay">
+      <div id="rules" aria-labelledby="rules-heading" aria-modal="true">
+        <button id="rules-close" aria-label="Close">&times;</button>
+        <div id="rules-content">
+          <h3 id="rules-heading">Guess the secret word</h3>
+          <p>
+            Each guess must be a word (of any length).  Some short phrases
+            are also allowed (e.g. San Juan or id est). The game will tell
+            you how semantically similar it thinks your word is to the
+            secret word.  Unlike that other word game, it's not about the
+            spelling; it's about the meaning. The similarity value comes
+            from Word2vec.  The highest possible similarity is 100
+            (indicating that the words are identical and you have won). The
+            lowest in theory is -100, but in practice the lowest is
+            something like -34.  By "semantically similar", I mean, roughly
+            "used in the context of similar words, in a database of news
+            articles."
+          </p>
+          <p>
+            Secret words may be any part of speech, but will always be
+            single words.  It's tempting to think only of nouns, since that
+            is how normal semantic word-guessing games work.  Don't get
+            caught in the trap!  Since our Word2vec data set contains some
+            proper nouns, guesses are case-sensitive.  But I removed all but
+            lower-case words from the secret word set, and if your word
+            matches the secret word but for case, you win anyway.  So if you
+            want to know if the word is more like nice
+            or <a href="https://en.wikipedia.org/wiki/Nice">Nice</a>, you
+            can ask about both.
+          </p>
+          <p>
+            The "Getting close" indicator tells you how close you are --if
+            your word is one of the 1,000 nearest normal words to the target
+            word, the rank will be given (1000 is the target word itself).
+            If your word is not one of the nearest 1000, you're "cold". (By
+            "normal" words", I mean non-capitalized words that appears in a
+            very large English word list; there are lots of capitalized,
+            misspelled, or obscure words that might be close but that won't
+            get a ranking.  Those get marked with "????").
+          </p>
+          <p>
+            You will need more than six guesses.  You will probably need
+            dozens of guesses. <b>There's a new word every day</b>, where
+            a day starts at midnight UTC <span id="localtime"></span>. <span id="yesterday"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <p id="similarity-story"> </p>
+    <div id="error" style="color:#ff0000"></div>
+    <form id="form" autocorrect="off" autocapitalize="none"
+          autocomplete="off">
+      <div id="form-row">
+        <div>
+          <input type="checkbox" name="lower" value="lower" id="lower" />
+          <label for="lower">Treat all input as lowercase</label>  (<a href="#capitalized-faq">see FAQ</a>)
+        </div>
+        <div id="guess-wrapper">
+          <input placeholder="Guess" autocorrect="off" autocapitalize="none"
+          autocomplete="off"
+          type="text" id="guess">
+          <input type="submit" value="Guess" id="guess-btn">
+        </div>
+      </div>
+    </form>
+    <div id="response"></div>
+    <div style="display:none">
+      <input type="text" id="share" />
+    </div>
+    <table id="guesses">
+    </table>
+  
+
+  <input type="button" value="Give up" id="give-up-btn">
+
+<footer>
+<h3 id="faq">FAQ</h3>
+
+    <p> Q: Why is the similarity so different from what I was expecting?</p>
+    <p> A: I can think of at least three reasons for this. </p>
+    <ol>
+      <li>Your guess, or the target word, is polysemous, and the
+        meaning that is similar is rarely used. This is why "leather"
+        is far from "patent."  Sometimes one usage is simply more
+        popular (among newspaper reporters, which is the corpus):
+        "display" is more often a verb than a noun, and its vector
+        reflects this.</li>
+      <li id="capitalized-faq">You capitalized your word.  SmartKey and some other
+        keyboards stupidly ignore the autocapitalize settings that I
+        have explicitly set in the HTML, and there does not seem to
+        be anything I can do about this.  I added a checkbox to help
+        you avoid this.</li>
+      <li>Your word and the target word belong to different parts of
+        speech.  Sometimes this matters a lot.  Sometimes it matters
+        only a little.</li>
+    </ol>
+    <p> The data set is what it is -- it's not perfect, and I can't
+    afford enough computing power (or a big enough corpus) to try to
+    make a better one.  The technique has limitations.  Sometimes,
+    they'll bite you and you'll lose.</p>
+    <p> Q: Can I play more than once per day? </p>
+    <p> A: No.  There are three reasons for this:</p>
+      <ol>
+        <li>Mindless imitation of that other word guessing game.</li>
+        <li>A game designer I know found a site that let you play as much of the other game as you want.  He immediately binged, and then got bored, and hasn't tweeted about it since.</li>
+        <li>Another friend of mine said that she considered giving up on one day's Semantle, and then realized it would be another 24 hours before she could try again.  So she persevered and got it.</li>
+      </ol>
+
+    <p> Q: How did you come up with this?</p>
+    <p>
+      A:
+      <a href="http://www.topped-with-meat.com/connector/frenchtoast.html">Prior
+      art</a>. I discovered French Toast about 20 years ago, and
+      immediately knew that I had to
+      tell <a href="https://blog.plover.com/">Dominus</a> about it.
+      He replied that in fact he
+      and <a href="https://moonmilk.com/">Ranjit</a> had invented it
+      ten or so years before that, and called it "Plenty Questions".
+      Also, <a href="https://www.datcreativity.com/task">the Divergent
+      Association Task</a> is the opposite of Semantle.
+    </p>
+    <p>
+      But I wasn't thinking of French Toast when I invented this.
+      Instead, I was thinking
+      about <a href="https://www.powerlanguage.co.uk/wordle/">Wordle</a>
+      and <a href="https://worldle.teuteuf.fr/">Worldle</a> and about
+      the dimensionality of data sets.  I considered Filmle, a movie
+      guessing game: You say "The Matrix", it says "Keanu Reeves has a
+      bacon number of 3 where bacon is the lead actor in the target
+      film." (and so on for Carrie-Ann Moss, Laurence Fishburne, and
+      Hugo Weaving for actors at corresponding billings).  But I don't
+      care about movies.  Too bad,
+      because <a href="https://www.imdb.com/interfaces/">IMDB</a>
+      actually has exactly the data that you would need to implement
+      it in a really easy form.  Then I remembered word2vec, and here
+      we are.
+    </p>
+    <p> Q: How does this work? </p>
+    <p> A: <a href="https://towardsdatascience.com/word2vec-explained-49c52b4ccb71">Here's an article on word2vec, the underlying technology</a>.
+    <p> Q: What data set did you use? </p>
+    <p> A: <tt>GoogleNews-vectors-negative300.bin</tt> from late 2021</p>
+    <p> Q: Can I see yesterday's word?  </p>
+    <p> A: Yes, "<span id="yesterday2"></span>". </p>
+    <p> Q: What words were closest to yesterday's word? </p>
+    <p> A: <span id="nearbyYesterday"></span>
+    <p> Q: Source code? </p>
+    <p> A: <a href="https://gitlab.com/novalis_dt/semantle">Yes!</a></p>
+    <p> Q: What about the words "and" or "of"?</p>
+    <p> A: No clue why the data set doesn't include them.  Perhaps
+      they were just warping the scores of everything else, since they
+      are used in so many different contexts?</p>
+    <p> Q: What about UK spelling?</p>
+    <p> A: The data seems to be normalized to US spelling.  Semantle
+      tries to automatically Americanize your spelling (in the cases
+      where only the American version is in the data set). Of course,
+      they probably couldn't normalize some words, like 'biscuit',
+      'lift', or 'pants', so for those you're on your own.</p>
+    <p> Q: Can I sort my guesses chronologically?</p>
+    <p> A: Yes: click on the "#" column header.  Click it again to go
+    reverse-chronological.  It will revert to similarity order when
+    you enter a guess (or when you click the "Similarity" column
+    header).
+    </p>
+    <p> Q: Why do the nearby word ranks go up instead of down? </p>
+    <p> A: I was caught between a rock and a hard place here: on one
+      hand, ranks are usually descending, but on the other hand, here,
+      the similarities are ascending. I chose what I thought was the
+      least bad option, but I don't think I would have been happy
+      either way. </p>
+    <p> Q: How does my performance compare to others?  What is
+    the average number of guesses across all players?</p>
+    <p> A: I don't keep statistics on this. But you are welcome to
+    brag on Twitter, or
+    on <a href="https://www.reddit.com/r/semantle">the subreddit</a>.
+    A leaderboard (a) is not in the spirit of the moment, and (b)
+    likely to lead to unpleasant behavior.</p>
+    <p> Q: Can I play in other languages? </p>
+    <p> A: Yes, <a href="https://swemantle.riddle.nu/">Swedish</a>,
+    <a href="https://semantle-he.herokuapp.com">Hebrew</a>, <a href="http://semantle-es.cgk.cl/">Spanish</a>, and <a href="https://contexto.me/">Portuguese</a> so far.</a> </p>
+    <p> Q: Can I play with a mob?</p>
+    <p> A: <a href="https://www.twitch.tv/intarective">Yes, on Twitch, sometimes.</a></p>
+    <p> Q: How do you pick the word of the day? </p>
+    <p> A: I grabbed a random list of the "most popular" 5,000 words
+    in English, and removed anything capitalized or with hyphens, and
+    the word2vec stopwords ("and", "if").  Then I shuffled it.</p>
+    <p> Q: Hints?</p>
+    <p> A: I'm still trying to figure out the right design, but
+    probably eventually.</p>
+    <p> Q: Can I email you to complain about how words are scored? </p>
+    <p> A: I will ignore those emails.  (Sorry, but I do have a day
+    job, and it's actually more fun than answering complaint emails).</p>
+
+
+    <div>Made by <a href="mailto:novalis@novalis.org">David Turner</a>.  Word2vec data from Google.</div>
+  </footer>
+  </body>
+</html>

@@ -1,18 +1,11 @@
+import pickle
+import sqlite3
 from typing import Dict, Optional
 
 from numpy import array
 from numpy.linalg import norm
 
-
-class Word2VecDb:
-    def __init__(self, path: str):
-        self.dict = load_db(path)
-
-    def similarity(self, word1: str, word2: str) -> Optional[float]:
-        try:
-            return cosine_similarity(self.dict[word1], self.dict[word2])
-        except KeyError:
-            return None
+cur = sqlite3.connect('data/valid_guesses.db').cursor()
 
 
 def load_db(path: str) -> Dict[str, array]:
@@ -25,6 +18,18 @@ def load_db(path: str) -> Dict[str, array]:
             words = line.split()
             rtn[words[0]] = array([float(w) for w in words[1:]])
     return rtn
+
+
+def similarity(word1: str, word2: str) -> float:
+    return cosine_similarity(get_word_vec(word1), get_word_vec(word2))
+
+
+def get_word_vec(word: str) -> Optional[array]:
+    cur.execute('SELECT vec FROM guesses WHERE word == ?', (word,))
+    if fetched := cur.fetchone() is not None:
+        return pickle.loads(fetched[0])
+    else:
+        raise KeyError(f'word {word} not found in DB')
 
 
 def cosine_similarity(vec1: array, vec2: array) -> float:

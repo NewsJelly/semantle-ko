@@ -1,9 +1,10 @@
 import pickle
 from typing import Set
+import sqlite3
 
 import numpy as np
 
-from word2vec import Word2VecDb
+from word2vec import load_db
 
 
 def valid_guess(s: str) -> bool:
@@ -29,24 +30,23 @@ def load_dic(path: str, allow_capitalization: bool = False) -> Set[str]:
 
 
 if __name__ == '__main__':
-    original_data = Word2VecDb('data/COW.token.wang2vec')
-    print("original # words:", len(original_data.dict))
+    original_data = load_db('data/COW.token.wang2vec')
+    print("original # words:", len(original_data))
     known_words = load_dic('data/de.dic')
     print("# words in dictionary:", len(known_words))
-    valid_nearest = [w for w in original_data.dict.keys() if w in known_words]
-    valid_nearest_mat = np.array([original_data.dict[w] for w in valid_nearest])
+    valid_nearest = [w for w in original_data.keys() if w in known_words]
+    valid_nearest_mat = np.array([original_data[w] for w in valid_nearest])
     print("valid nearest shape:", valid_nearest_mat.shape)
     with open('data/valid_nearest.dat', 'wb') as f:
         pickle.dump((valid_nearest, valid_nearest_mat), f)
     print("done pickling matrix")
 
-    invalids = set()
-    for k in original_data.dict:
-        if not valid_guess(k):
-            invalids.add(k)
-    for i in invalids:
-        del original_data.dict[i]
-
-    print("# all valid guesses:", len(original_data.dict))
-    with open('data/all_valid_guesses.dat', 'wb') as f:
-        pickle.dump(original_data, f)
+    connection = sqlite3.connect('data/valid_guesses.db')
+    cursor = connection.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS guesses (word text PRIMARY KEY, vec blob)""")
+    print("created table")
+    with connection:
+        for k, v in original_data.items():
+            if valid_guess(k):
+                cursor.execute("""INSERT INTO guesses values (?, ?)""", (k, pickle.dumps(v)))
+    connection.close()

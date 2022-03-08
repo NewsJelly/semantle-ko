@@ -5,8 +5,6 @@ from typing import Dict, Optional
 from numpy import array
 from numpy.linalg import norm
 
-cur = sqlite3.connect('data/valid_guesses.db').cursor()
-
 
 def load_db(path: str) -> Dict[str, array]:
     rtn = dict()
@@ -25,8 +23,9 @@ def similarity(word1: str, word2: str) -> float:
 
 
 def get_word_vec(word: str) -> Optional[array]:
+    cur = sqlite3.connect('data/valid_guesses.db').cursor()
     cur.execute('SELECT vec FROM guesses WHERE word == ?', (word,))
-    if fetched := cur.fetchone() is not None:
+    if (fetched := cur.fetchone()) is not None:
         return pickle.loads(fetched[0])
     else:
         raise KeyError(f'word {word} not found in DB')

@@ -21,10 +21,11 @@ def dump_nearest(word: str, words: List[str], mat: array, k: int = 1000) -> Dict
     sort_args = np.argsort(sim_dists)[::-1]
     words_sorted = words_a[sim_idxs[sort_args]]
     dists_sorted = sim_dists[sort_args]
-    result = np.array([words_sorted, dists_sorted]).T
-    closeness = {word: ("Gefunden!", 1)}
-    for idx, (w, d) in enumerate(result[1:]):
-        closeness[w] = (k - idx, d)
+    result = zip(words_sorted, dists_sorted)
+    closeness = dict()
+    for idx, (w, d) in enumerate(result):
+        closeness[w] = (k - idx + 1, d)
+    closeness[word] = ("Gefunden!", 1)
     with open(f'data/near/{word}.dat', 'wb') as f:
         pickle.dump(closeness, f)
     return closeness

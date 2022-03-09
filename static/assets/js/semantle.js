@@ -18,9 +18,11 @@ let model = null;
 const now = Date.now();
 const today = Math.floor(now / 86400000);
 const initialDay = 19021;
-const puzzleNumber = (today - initialDay) % secretWords.length;
+//const puzzleNumber = (today - initialDay) % secretWords.length;
+const puzzleNumber = 1;
 const handleStats = puzzleNumber >= 24;
-const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;
+//const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;
+const yesterdayPuzzleNumber = 0;
 const storage = window.localStorage;
 let caps = 0;
 let warnedCaps = 0;
@@ -30,56 +32,6 @@ let prefersDarkColorScheme = false;
 function $(id) {
     if (id.charAt(0) !== '#') return false;
     return document.getElementById(id.substring(1));
-}
-
-function mag(a) {
-    return Math.sqrt(a.reduce(function(sum, val) {
-        return sum + val * val;
-    }, 0));
-}
-
-function dot(f1, f2) {
-    return f1.reduce(function(sum, a, idx) {
-        return sum + a*f2[idx];
-    }, 0);
-}
-
-function getCosSim(f1, f2) {
-    return dot(f1,f2)/(mag(f1)*mag(f2));
-}
-
-
-function plus(v1, v2) {
-    const out = [];
-    for (let i = 0; i < v1.length; i++) {
-            out.push(v1[i] + v2[i]);
-    }
-    return out;
-}
-
-function minus(v1, v2) {
-    const out = [];
-    for (let i = 0; i < v1.length; i++) {
-        out.push(v1[i] - v2[i]);
-    }
-    return out;
-}
-
-
-function scale (v, s) {
-    const out = [];
-    for (let i = 0; i < v.length; i++) {
-        out.push(v[i] * s);
-    }
-    return out;
-}
-
-
-function project_along(v1, v2, t) {
-    const v = minus(v2, v1);
-    const num = dot(minus(t, v1), v);
-    const denom = dot(v,v);
-    return num/denom;
 }
 
 function share() {
@@ -98,48 +50,21 @@ function share() {
 
 const words_selected = [];
 const cache = {};
-let secret = "";
-let secretVec = null;
 let similarityStory = null;
 
-function select(word, secretVec) {
-    /*
-    let model;
-    if (!(word in cache)) {
-        // this can happen on a reload, since we do not store
-        // the vectors in localstorage
-        model = cache[word];
-    } else {
-        model = getModel(word);
-        cache[word] = model;
-    }
-    words_selected.push([word, model.vec]);
-    if (words_selected.length > 2) {
-        words_selected.pop();
-    }
-    const proj = project_along(words_selected[0][1], words_selected[1][1],
-                               target);
-    console.log(proj);
-*/
-}
-
 function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
-    let percentileText = "(cold)";
+    let percentileText = percentile;
     let progress = "";
     let cls = "";
-    if (similarity >= similarityStory.rest * 100) {
+    if (similarity >= similarityStory.rest * 100 && percentile === '(kalt)') {
         percentileText = '<span class="weirdWord">????<span class="tooltiptext">Unusual word found!  This word is not in the list of &quot;normal&quot; words that we use for the top-1000 list, but it is still similar! (Is it maybe capitalized?)</span></span>';
     }
-    if (percentile) {
-        if (percentile == 1000) {
-            percentileText = "FOUND!";
-        } else {
+    if (typeof percentile === 'number') {
             cls = "close";
             percentileText = `<span class="percentile">${percentile}/1000</span>&nbsp;`;
             progress = ` <span class="progress-container">
 <span class="progress-bar" style="width:${percentile/10}%">&nbsp;</span>
 </span>`;
-        }
     }
     let color;
     if (oldGuess === guess) {
@@ -212,8 +137,8 @@ function solveStory(guesses, puzzleNumber) {
 }
 
 let Semantle = (function() {
-    async function getSimilarityStory(secret) {
-        const url = "/similarity/" + secret;
+    async function getSimilarityStory(puzzleNumber) {
+        const url = "/similarity/" + puzzleNumber;
         const response = await fetch(url);
         try {
             return await response.json();
@@ -222,11 +147,11 @@ let Semantle = (function() {
         }
     }
 
-    async function getModel(word) {
+    async function submitGuess(word) {
         if (cache.hasOwnProperty(word)) {
             return cache[word];
         }
-        const url = "/model2/" + secret + "/" + word.replaceAll(" ", "_");
+        const url = "/guess/" + puzzleNumber + "/" + word;
         const response = await fetch(url);
         try {
             return await response.json();
@@ -246,28 +171,26 @@ let Semantle = (function() {
     }
 
     async function init() {
-        secret = secretWords[puzzleNumber].toLowerCase();
-        const yesterday = secretWords[yesterdayPuzzleNumber].toLowerCase();
 
-        $('#yesterday').innerHTML = `Yesterday's word was <b>"${yesterday}"</b>.`;
-        $('#yesterday2').innerHTML = yesterday;
+        //$('#yesterday').innerHTML = `Yesterday's word was <b>"${yesterday}"</b>.`;
+        //$('#yesterday2').innerHTML = yesterday;
 
-        try {
+        /*try {
             const yesterdayNearby = await getNearby(yesterday);
             const secretBase64 = btoa(unescape(encodeURIComponent(yesterday)));
             $('#nearbyYesterday').innerHTML = `${yesterdayNearby.join(", ")}, in descending order of closensess. <a href="nearby_1k/${secretBase64}">More?</a>`;
         } catch (e) {
             $('#nearbyYesterday').innerHTML = `Coming soon!`;
-        }
+        }*/
         updateLocalTime();
 
         try {
-            similarityStory = await getSimilarityStory(secret);
+            similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
-Today is puzzle number <b>${puzzleNumber}</b>. The nearest word has a similarity of
-<b>${(similarityStory.top * 100).toFixed(2)}</b>, the tenth-nearest has a similarity of
-${(similarityStory.top10 * 100).toFixed(2)} and the one thousandth nearest word has a
-similarity of ${(similarityStory.rest * 100).toFixed(2)}.
+Heute ist Puzzle Nummer <b>${puzzleNumber}</b>. Das ähnlichste Wort hat eine Ähnlichkeit von
+<b>${(similarityStory.top * 100).toFixed(2)}</b>, das zehnt-ähnlichste Wort hat eine Ähnlichkeit von
+${(similarityStory.top10 * 100).toFixed(2)} und das tausend-ähnlichste Wort hat eine Ähnlichkeit von
+${(similarityStory.rest * 100).toFixed(2)}.
 `;
         } catch {
             // we can live without this in the event that something is broken
@@ -311,46 +234,26 @@ similarity of ${(similarityStory.rest * 100).toFixed(2)}.
 
         $('#form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            if (secretVec === null) {
-                secretVec = (await getModel(secret)).vec;
-            }
             $('#guess').focus();
             $('#error').textContent = "";
             let guess = $('#guess').value.trim().replace("!", "").replace("*", "");
             if (!guess) {
                 return false;
             }
-            if ($("#lower").checked) {
-                guess = guess.toLowerCase();
-            }
-
-            if (typeof unbritish !== 'undefined' && unbritish.hasOwnProperty(guess)) {
-                guess = unbritish[guess];
-            }
-
-            if (guess[0].toLowerCase() != guess[0]) {
-                caps += 1;
-            }
-            if (caps >= 2 && (caps / guesses.length) > 0.4 && !warnedCaps) {
-                warnedCaps = true;
-                $("#lower").checked = confirm("You're entering a lot of words with initial capital letters.  This is probably not what you want to do, and it's probably caused by your phone keyboard ignoring the autocapitalize setting.  \"Nice\" is a city. \"nice\" is an adjective.  Do you want me to downcase your guesses for you?");
-            }
+            guess = guess.toLowerCase();
 
             $('#guess').value = "";
 
-            const guessData = await getModel(guess);
+            const guessData = await submitGuess(guess);
             if (!guessData) {
                 $('#error').textContent = `I don't know the word ${guess}.`;
                 return false;
             }
 
-            let percentile = guessData.percentile;
-
-            const guessVec = guessData.vec;
-
             cache[guess] = guessData;
 
-            let similarity = getCosSim(guessVec, secretVec) * 100.0;
+            let percentile = guessData.rank;
+            let similarity = guessData.sim * 100.0;
             if (!guessed.has(guess)) {
                 guessCount += 1;
                 guessed.add(guess);

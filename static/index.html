@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Semantle-De</title>
+    <title>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</title>
     <script src="assets/js/semantle.js"></script>
     <script src="assets/js/clipboard.js"></script>
     <link rel="stylesheet" href="assets/styles.css">
@@ -23,53 +23,17 @@
   </head>
   <body>
     <header>
-      <h2>Semantle</h2>
+      <h2>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</h2>
       <button aria-label="Rules" id="rules-button">?</button>
     </header>
     <div id="rules-underlay">
       <div id="rules" aria-labelledby="rules-heading" aria-modal="true">
         <button id="rules-close" aria-label="Close">&times;</button>
         <div id="rules-content">
-          <h3 id="rules-heading">Guess the secret word</h3>
+          <h3 id="rules-heading">Errate das geheime Lösungswort</h3>
           <p>
-            Each guess must be a word (of any length).  Some short phrases
-            are also allowed (e.g. San Juan or id est). The game will tell
-            you how semantically similar it thinks your word is to the
-            secret word.  Unlike that other word game, it's not about the
-            spelling; it's about the meaning. The similarity value comes
-            from Word2vec.  The highest possible similarity is 100
-            (indicating that the words are identical and you have won). The
-            lowest in theory is -100, but in practice the lowest is
-            something like -34.  By "semantically similar", I mean, roughly
-            "used in the context of similar words, in a database of news
-            articles."
-          </p>
-          <p>
-            Secret words may be any part of speech, but will always be
-            single words.  It's tempting to think only of nouns, since that
-            is how normal semantic word-guessing games work.  Don't get
-            caught in the trap!  Since our Word2vec data set contains some
-            proper nouns, guesses are case-sensitive.  But I removed all but
-            lower-case words from the secret word set, and if your word
-            matches the secret word but for case, you win anyway.  So if you
-            want to know if the word is more like nice
-            or <a href="https://en.wikipedia.org/wiki/Nice">Nice</a>, you
-            can ask about both.
-          </p>
-          <p>
-            The "Getting close" indicator tells you how close you are --if
-            your word is one of the 1,000 nearest normal words to the target
-            word, the rank will be given (1000 is the target word itself).
-            If your word is not one of the nearest 1000, you're "cold". (By
-            "normal" words", I mean non-capitalized words that appears in a
-            very large English word list; there are lots of capitalized,
-            misspelled, or obscure words that might be close but that won't
-            get a ranking.  Those get marked with "????").
-          </p>
-          <p>
-            You will need more than six guesses.  You will probably need
-            dozens of guesses. <b>There's a new word every day</b>, where
-            a day starts at midnight UTC <span id="localtime"></span>. <span id="yesterday"></span>
+            Achtung, die Seite ist momentan noch unter Arbeit. Jederzeit kann sie offline gehen oder euer
+            Fortschritt gelöscht werden. Das Lösungswort wird nicht nach festem Zeitplan aktualisiert.
           </p>
         </div>
       </div>

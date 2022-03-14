@@ -50,7 +50,7 @@ if __name__ == '__main__':
                 if valid_nearest_mat is None:
                     valid_nearest_mat = np.array([vec])
                 else:
-                    np.append(valid_nearest_mat, [vec], axis=0)
+                    valid_nearest_mat = np.append(valid_nearest_mat, [vec], axis=0)
             if valid_guess(word):
                 cursor.execute("""INSERT INTO guesses values (?, ?)""", (word, pickle.dumps(vec)))
             if n % 100000 == 0:

@@ -59,7 +59,3 @@ def get_guess(day: int, word: str):
 def get_similarity(day: int):
     nearest_dists = sorted([v[1] for v in app.nearest.values()])
     return jsonify({"top": nearest_dists[-2], "top10": nearest_dists[-12], "rest": nearest_dists[0]})
-
-
-print("starting waitress")
-waitress.serve(app, host='0.0.0.0', port=5000, threads=1)

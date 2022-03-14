@@ -1,11 +1,12 @@
 import json
-import random
+from random import Random
 
 import numpy as np
 import spacy
 
 from process_vecs import load_dic
 
+rnd = Random(133742069)
 n_most_frequent_words = 8500
 # need to download data with 'python -m spacy download de_core_news_sm'
 nlp = spacy.load('de_core_news_sm')
@@ -34,10 +35,12 @@ if __name__ == '__main__':
             frequent_with_capital.add(w.capitalize())
     print("# valid (frequent + capitalized):", len(frequent_with_capital))
     lemmatized_words = set(word_to_lemma(str(w)).lower() for w in frequent_with_capital)
+    lemmatized_words.remove("blaß")
+    lemmatized_words.remove("naß")
+    lemmatized_words.remove("gewiß")
     print("# valid base words:", len(lemmatized_words))
-    shuffle_list = list(lemmatized_words)
-    random.shuffle(shuffle_list)
-    # note: need to remove old orthography (blaß, naß, gewiß)
-    # what about names?
+    shuffle_list = list(lemmatized_words).sort()
+    rnd.shuffle(shuffle_list)
+    # are there any names i should remove? other words?
     with open('data/secrets.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(shuffle_list))

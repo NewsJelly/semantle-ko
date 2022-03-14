@@ -10,12 +10,6 @@ install requirements
 pip install -r requirements.txt
 ´´´
 
-Download spacy model (optional, if you want to regenerate secrets)
-´´´bash
-pip install spacy~=3.2.3
-python -m spacy download de_core_news_sm
-´´´
-
 Download Word2Vec data:
 ´´´bash
 cd data
@@ -26,7 +20,13 @@ rm COW.lower.zip
 
 save word2vec in db
 ´´´bash
-
+cd ..
+python process_vecs.py
 ´´´
 
-
+(optional) Regenerate secrets
+´´´bash
+pip install spacy~=3.2.3
+python -m spacy download de_core_news_sm
+python generate_secrets.py
+´´´

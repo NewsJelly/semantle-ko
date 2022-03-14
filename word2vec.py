@@ -1,21 +1,9 @@
 import pickle
 import sqlite3
-from typing import Dict, Optional
+from typing import Optional
 
 from numpy import array
 from numpy.linalg import norm
-
-
-def load_db(path: str) -> Dict[str, array]:
-    rtn = dict()
-    with open(path, 'r', encoding='utf-8') as f:
-        _ = f.readline()
-        for line in f.readlines():
-            # careful! some data sets (e.g. dewiki100.txt) have non-breaking spaces, which get split
-            # others have trailing spaces (e.g. COW.token.wang2vec), meaning an empty string is included with split(' ')
-            words = line.split()
-            rtn[words[0]] = array([float(w) for w in words[1:]])
-    return rtn
 
 
 def similarity(word1: str, word2: str) -> float:

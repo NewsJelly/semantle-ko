@@ -39,7 +39,8 @@ if __name__ == '__main__':
     lemmatized_words.remove("naß")
     lemmatized_words.remove("gewiß")
     print("# valid base words:", len(lemmatized_words))
-    shuffle_list = list(lemmatized_words).sort()
+    shuffle_list = list(lemmatized_words)
+    shuffle_list.sort()
     rnd.shuffle(shuffle_list)
     # are there any names i should remove? other words?
     with open('data/secrets.txt', 'w', encoding='utf-8') as f:

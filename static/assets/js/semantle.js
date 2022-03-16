@@ -61,9 +61,9 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     }
     if (typeof percentile === 'number') {
             cls = "close";
-            percentileText = `<span class="percentile">${percentile}/1000</span>&nbsp;`;
+            percentileText = `<span class="percentile">${percentile}</span>&nbsp;`;
             progress = ` <span class="progress-container">
-<span class="progress-bar" style="width:${percentile/10}%">&nbsp;</span>
+<span class="progress-bar" style="width:${(1001 - percentile)/10}%">&nbsp;</span>
 </span>`;
     }
     let color;

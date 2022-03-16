@@ -48,9 +48,9 @@ if __name__ == '__main__':
             if word in known_words:
                 valid_nearest.append(word)
                 if valid_nearest_mat is None:
-                    valid_nearest_mat = np.array([vec])
+                    valid_nearest_mat = [vec]
                 else:
-                    valid_nearest_mat = np.append(valid_nearest_mat, [vec], axis=0)
+                    valid_nearest_mat.append(vec)
             if valid_guess(word):
                 cursor.execute("""INSERT INTO guesses values (?, ?)""", (word, pickle.dumps(vec)))
             if n % 100000 == 0:
@@ -58,6 +58,7 @@ if __name__ == '__main__':
                 connection.commit()
     connection.commit()
     connection.close()
+    valid_nearest_mat = np.array(valid_nearest_mat)
     print("valid nearest shape:", valid_nearest_mat.shape)
     with open('data/valid_nearest.dat', 'wb') as f:
         pickle.dump((valid_nearest, valid_nearest_mat), f)

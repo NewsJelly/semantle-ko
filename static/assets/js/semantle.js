@@ -19,7 +19,7 @@ const now = Date.now();
 const today = Math.floor(now / 86400000);
 const initialDay = 19021;
 //const puzzleNumber = (today - initialDay) % secretWords.length;
-const puzzleNumber = 1;
+const puzzleNumber = 1171;
 const handleStats = puzzleNumber >= 24;
 //const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;
 const yesterdayPuzzleNumber = 0;
@@ -55,12 +55,12 @@ let similarityStory = null;
 function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let percentileText = percentile;
     let progress = "";
-    let cls = "";
+    let closeClass = "";
     if (similarity >= similarityStory.rest * 100 && percentile === '(kalt)') {
         percentileText = '<span class="weirdWord">????<span class="tooltiptext">Unusual word found!  This word is not in the list of &quot;normal&quot; words that we use for the top-1000 list, but it is still similar! (Is it maybe capitalized?)</span></span>';
     }
     if (typeof percentile === 'number') {
-            cls = "close";
+            closeClass = "close";
             percentileText = `<span class="percentile">${percentile}</span>&nbsp;`;
             progress = ` <span class="progress-container">
 <span class="progress-bar" style="width:${(1001 - percentile)/10}%">&nbsp;</span>
@@ -81,7 +81,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     } else {
         similarityColor = `${similarityLevel},0,0`;
     }
-    return `<tr><td>${guessNumber}</td><td style="color:${color}" onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td style="color: rgb(${similarityColor})">${similarity.toFixed(2)}</td><td class="${cls}">${percentileText}${progress}
+    return `<tr><td>${guessNumber}</td><td style="color:${color}" onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td style="color: rgb(${similarityColor})">${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
 </td></tr>`;
 
 }

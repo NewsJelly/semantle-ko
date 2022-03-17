@@ -124,7 +124,7 @@ function solveStory(guesses, puzzleNumber) {
     [similarity, old_guess, percentile, guess_number] = penultimate_guess;
     const penultimate_guess_msg = `Mein vorletzter Versuch ${describe(similarity, percentile)}.`;
 
-    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} Versuchen erraten. ${first_guess}${first_hit}${penultimate_guess_msg} https://semantlich.johannesgaetjen.de`;
+    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} Versuchen erraten. http://johannesgaetjen.de`;
 }
 
 let Semantle = (function() {

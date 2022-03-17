@@ -12,7 +12,7 @@
     <link rel="manifest" href="assets/site.webmanifest">
     <!--
 
-    Copyright (c) 2022, David Turner <novalis@novalis.org>
+    Copyright (c) 2022, Johannes Gätjen, forked from Semantle by David Turner <novalis@novalis.org> semantle.novalis.org
 
      This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
 
@@ -33,10 +33,13 @@
           <h3 id="rules-heading">Errate das geheime Lösungswort</h3>
           <p>
             Achtung, die Seite ist momentan noch unter Arbeit. Jederzeit kann sie offline gehen oder euer
-            Fortschritt gelöscht werden. Das Lösungswort wird nicht nach festem Zeitplan aktualisiert.
+            Fortschritt gelöscht werden.
           </p>
           <p>
-            no bug: <span id="localtime"></span>. <span id="yesterday"></span>
+            Immer um 0:00 Uhr UTC, <span id="localtime"></span>, gibt es ein neues Lösungswort. <span id="yesterday"></span>
+          </p>
+          <p>
+            Diese Seite verwendet Cookies um den Spielfortschritt und Statistiken zu speichern.
           </p>
         </div>
       </div>
@@ -46,15 +49,11 @@
     <form id="form" autocorrect="off" autocapitalize="none"
           autocomplete="off">
       <div id="form-row">
-        <div>
-          <input type="checkbox" name="lower" value="lower" id="lower" />
-          <label for="lower">Treat all input as lowercase</label>
-        </div>
         <div id="guess-wrapper">
-          <input placeholder="Guess" autocorrect="off" autocapitalize="none"
+          <input placeholder="Raten" autocorrect="off" autocapitalize="none"
           autocomplete="off"
           type="text" id="guess">
-          <input type="submit" value="Guess" id="guess-btn">
+          <input type="submit" value="Raten" id="guess-btn">
         </div>
       </div>
     </form>
@@ -66,7 +65,7 @@
     </table>
   
 
-  <input type="button" value="Give up" id="give-up-btn">
+  <input type="button" value="Aufgeben" id="give-up-btn">
 
 <footer>
 <h3 id="faq">FAQ</h3>
@@ -74,7 +73,7 @@
   <p><b>Warum sind die Ähnlichkeiten so viel höher als im Englischen Semantle?</b></p>
   <p> Weniger Dimensionen? </p>
 
-  <div>Made by Johannes Gätjen.  Siehe Semantle by David Turner. Word2Vec von ....</div>
+  <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von Johannes Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed und A. Mehler.</a></div>
 
 </footer>
   </body>

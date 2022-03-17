@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2022, David Turner <novalis@novalis.org>
+    Copyright (c) 2022, Johannes Gätjen, forked from Semantle by David Turner <novalis@novalis.org> semantle.novalis.org
 
      This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
 
@@ -15,17 +15,15 @@ let guesses = [];
 let guessed = new Set();
 let guessCount = 0;
 let model = null;
+let numPuzzles = 4565;
 const now = Date.now();
-const today = Math.floor(now / 86400000);
-const initialDay = 19021;
-//const puzzleNumber = (today - initialDay) % secretWords.length;
-const puzzleNumber = 1171;
+const today = Math.floor(Date.now() / 86400000);
+const initialDay = new Date('2019-01-01') / 86400000;
+const puzzleNumber = (today - initialDay) % numPuzzles;
 const handleStats = puzzleNumber >= 24;
 //const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;
-const yesterdayPuzzleNumber = 0;
+//const yesterdayPuzzleNumber = 0;
 const storage = window.localStorage;
-let caps = 0;
-let warnedCaps = 0;
 let chrono_forward = 1;
 let prefersDarkColorScheme = false;
 
@@ -41,10 +39,10 @@ function share() {
     const copied = ClipboardJS.copy(text);
 
     if (copied) {
-        alert("Copied to clipboard");
+        alert("In Zwischenablage kopiert");
     }
     else {
-        alert("Failed to copy to clipboard");
+        alert("Kopieren fehlgeschlagen");
     }
 }
 
@@ -57,7 +55,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let progress = "";
     let closeClass = "";
     if (similarity >= similarityStory.rest * 100 && percentile === '(kalt)') {
-        percentileText = '<span class="weirdWord">????<span class="tooltiptext">Unusual word found!  This word is not in the list of &quot;normal&quot; words that we use for the top-1000 list, but it is still similar! (Is it maybe capitalized?)</span></span>';
+        percentileText = '<span class="weirdWord">????<span class="tooltiptext">Dieses Wort ist nicht im Wörterbuch, ist aber im Datensatz vorhanden und hat eine höhere Ähnlichkeit, als das tausendst-ähnlichste Wort.</span></span>';
     }
     if (typeof percentile === 'number') {
             closeClass = "close";
@@ -74,14 +72,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     } else {
         color = '#000';
     }
-    const similarityLevel = similarity * 2.55;
-    let similarityColor;
-    if (prefersDarkColorScheme) {
-        similarityColor = `255,${255-similarityLevel},${255-similarityLevel}`;
-    } else {
-        similarityColor = `${similarityLevel},0,0`;
-    }
-    return `<tr><td>${guessNumber}</td><td style="color:${color}" onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td style="color: rgb(${similarityColor})">${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
+    return `<tr><td>${guessNumber}</td><td style="color:${color}" onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
 </td></tr>`;
 
 }
@@ -90,7 +81,7 @@ function updateLocalTime() {
     const now = new Date();
     now.setUTCHours(24, 0, 0, 0);
 
-    $('#localtime').innerHTML = `or ${now.getHours()}:00 your time`;
+    $('#localtime').innerHTML = `bzw. ${now.getHours()}:00 deiner Zeit`;
 }
 
 function solveStory(guesses, puzzleNumber) {
@@ -123,7 +114,7 @@ function solveStory(guesses, puzzleNumber) {
         for (let entry of guesses_chrono) {
             [similarity, old_guess, percentile, guess_number] = entry;
             if (percentile) {
-                first_hit = `  My first word in the top 1000 was at guess #${guess_number}.  `;
+                first_hit = `  Mein erstes Wort in den Top 1000 war #${guess_number}.  `;
                 break;
             }
         }
@@ -131,9 +122,9 @@ function solveStory(guesses, puzzleNumber) {
 
     const penultimate_guess = guesses_chrono[guesses_chrono.length - 2];
     [similarity, old_guess, percentile, guess_number] = penultimate_guess;
-    const penultimate_guess_msg = `My penultimate guess ${describe(similarity, percentile)}.`;
+    const penultimate_guess_msg = `Mein vorletzter Versuch ${describe(similarity, percentile)}.`;
 
-    return `I solved Semantle #${puzzleNumber} in ${guess_count} guesses. ${first_guess}${first_hit}${penultimate_guess_msg} https://semantle.novalis.org/`;
+    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} Versuchen erraten. ${first_guess}${first_hit}${penultimate_guess_msg} https://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -226,7 +217,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
         $('#give-up-btn').addEventListener('click', function(event) {
             if (!gameOver) {
-                if (confirm("Are you sure you want to give up?")) {
+                if (confirm("Bist du sicher, dass du aufgeben möchtest?")) {
                     endGame(false, true);
                 }
             }
@@ -261,7 +252,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
                 const newEntry = [similarity, guess, percentile, guessCount];
                 guesses.push(newEntry);
 
-                if (handleStats) {
+                if (!gameOver) {
                     const stats = getStats();
                     stats['totalGuesses'] += 1;
                     storage.setItem('stats', JSON.stringify(stats));
@@ -278,7 +269,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             updateGuesses(guess);
 
             firstGuess = false;
-            if (guess.toLowerCase() === secret && !gameOver) {
+            if (guessData.sim == 1 && !gameOver) {
                 endGame(true, true);
             }
             return false;
@@ -304,7 +295,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     }
 
     function updateGuesses(guess) {
-        let inner = `<tr><th id="chronoOrder">#</th><th id="alphaOrder">Guess</th><th id="similarityOrder">Similarity</th><th>Getting close?</th></tr>`;
+        let inner = `<tr><th id="chronoOrder">#</th><th id="alphaOrder">Geratenes Wort</th><th id="similarityOrder">Ähnlichkeit</th><th>Ähnlichkeitsrang</th></tr>`;
         /* This is dumb: first we find the most-recent word, and put
            it at the top.  Then we do the rest. */
         for (let entry of guesses) {
@@ -384,54 +375,49 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     }
 
     function endGame(won, countStats) {
-        let stats;
-        if (handleStats) {
-            stats = getStats();
-            if (countStats) {
-                const onStreak = (stats['lastEnd'] == puzzleNumber - 1);
+        let stats = getStats();
+        if (countStats) {
+            const onStreak = (stats['lastEnd'] == puzzleNumber - 1);
 
-                stats['lastEnd'] = puzzleNumber;
-                if (won) {
-                    if (onStreak) {
-                        stats['winStreak'] += 1;
-                    } else {
-                    stats['winStreak'] = 1;
-                    }
-                    stats['wins'] += 1;
+            stats['lastEnd'] = puzzleNumber;
+            if (won) {
+                if (onStreak) {
+                    stats['winStreak'] += 1;
                 } else {
-                    stats['winStreak'] = 0;
-                    stats['giveups'] += 1;
+                stats['winStreak'] = 1;
                 }
-                storage.setItem("stats", JSON.stringify(stats));
+                stats['wins'] += 1;
+            } else {
+                stats['winStreak'] = 0;
+                stats['giveups'] += 1;
             }
+            storage.setItem("stats", JSON.stringify(stats));
         }
 
         $('#give-up-btn').style = "display:none;";
         $('#response').classList.add("gaveup");
         gameOver = true;
-        const secretBase64 = btoa(unescape(encodeURIComponent(secret)));
+        // const secretBase64 = btoa(unescape(encodeURIComponent(secret)));
         let response;
         if (won) {
-            response = `<p><b>You found it in ${guesses.length}!  The secret word is ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words. <a href="javascript:share();">Share</a> and play again tomorrow.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`
+            response = `<p><b>Du hast es in ${guesses.length} gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder.</p>`;// /* You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.*/
         } else {
-            response = `<p><b>You gave up!  The secret word is: ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`;
+            response = `<p><b>Du hast aufgegeben! </b></p>`;// The secret word is: ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`;
         }
 
-        if (handleStats) {
-            const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
-            response += `<br/>
-Stats (since we started recording, on day 23): <br/>
+        const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
+        response += `<br/>
+Statistik: <br/>
 <table>
-<tr><th>First game:</th><td>${stats['firstPlay']}</td></tr>
-<tr><th>Total days played:</th><td>${totalGames}</td></tr>
-<tr><th>Wins:</th><td>${stats['wins']}</td></tr>
-<tr><th>Win streak:</th><td>${stats['winStreak']}</td></tr>
-<tr><th>Give-ups:</th><td>${stats['giveups']}</td></tr>
-<tr><th>Did not finish</th><td>${stats['abandons']}</td></tr>
-<tr><th>Total guesses across all games:</th><td>${stats['totalGuesses']}</td></tr>
+<tr><th>Erstes Spiel:</th><td>${stats['firstPlay']}</td></tr>
+<tr><th>Anzahl Spiele gespielt:</th><td>${totalGames}</td></tr>
+<tr><th>Gewonnen:</th><td>${stats['wins']}</td></tr>
+<tr><th>Spiele in Folge gewonnen:</th><td>${stats['winStreak']}</td></tr>
+<tr><th>Aufgegeben:</th><td>${stats['giveups']}</td></tr>
+<tr><th>Nicht beendet:</th><td>${stats['abandons']}</td></tr>
+<tr><th>Gesamtzahl Versuche über alle Spiele:</th><td>${stats['totalGuesses']}</td></tr>
 </table>
 `;
-        }
         $('#response').innerHTML = response;
 
         if (countStats) {

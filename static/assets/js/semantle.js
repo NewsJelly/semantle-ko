@@ -18,7 +18,7 @@ let model = null;
 let numPuzzles = 4565;
 const now = Date.now();
 const today = Math.floor(Date.now() / 86400000);
-const initialDay = new Date('2019-01-01') / 86400000;
+const initialDay = new Date('2018-01-01') / 86400000;
 const puzzleNumber = (today - initialDay) % numPuzzles;
 const handleStats = puzzleNumber >= 24;
 //const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;

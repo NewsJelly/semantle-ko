@@ -15,7 +15,7 @@ import word2vec
 from process_similar import get_nearest
 
 NUM_SECRETS = 4565
-FIRST_DAY = date(2019, 1, 1)
+FIRST_DAY = date(2018, 1, 1)
 scheduler = BackgroundScheduler()
 scheduler.start()
 

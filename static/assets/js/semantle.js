@@ -81,7 +81,7 @@ function updateLocalTime() {
     const now = new Date();
     now.setUTCHours(24, 0, 0, 0);
 
-    $('#localtime').innerHTML = `bzw. ${now.getHours()}:00 deiner Zeit`;
+    $('#localtime').innerHTML = `bzw. ${now.getHours()}:00 Uhr deiner Zeit`;
 }
 
 function solveStory(guesses, puzzleNumber) {

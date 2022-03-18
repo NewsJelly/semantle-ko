@@ -30,7 +30,8 @@ python process_vecs.py
 
 (optional) Regenerate secrets
 ```bash
-pip install spacy~=3.2.3
-python -m spacy download de_core_news_sm
+cd data
+wget http://www.ids-mannheim.de/fileadmin/kl/derewo/derewo-v-ww-bll-320000g-2012-12-31-1.0.zip
+unzip derewo-v-ww-bll-320000g-2012-12-31-1.0.zip
 python generate_secrets.py
 ```

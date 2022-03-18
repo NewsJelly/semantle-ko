@@ -65,7 +65,7 @@
     </table>
   
 
-  <input type="button" value="Aufgeben" id="give-up-btn">
+  <input type="button" value="Aufgeben" id="give-up-btn" style="display:none;">
 
 <footer>
 <h3 id="faq">FAQ</h3>
@@ -73,7 +73,16 @@
   <p><b>Warum sind die Ähnlichkeiten so viel höher als im Englischen Semantle?</b></p>
   <p> Weniger Dimensionen? </p>
 
-  <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von Johannes Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed und A. Mehler.</a></div>
+  <p><b>Wie wurden die möglichen Lösungswörter ausgewählt?</b></p>
+  <p>Ich habe die 5000 häufigsten Wörter aus der <a href ="http://www.ids-mannheim.de/derewo">
+    Korpusbasierte Wortgrundformenliste DeReWo v-ww-bll-320000g-2012-12-31-1.0</a> genommen, und Wörter mit Bindestrich
+    oder Akzenten entfernt (z.B. Café), sowie bei Wörtern, wo mehrere Grundformen möglich sind (z.B. zweitbeste,
+    zweitbester, zweitbestes) eins davon zufällig ausgewählt.
+  </p>
+
+  <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von Johannes
+    Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed und A. Mehler.</a>
+  </div>
 
 </footer>
   </body>

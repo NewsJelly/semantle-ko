@@ -237,7 +237,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
             const guessData = await submitGuess(guess);
             if (!guessData) {
-                $('#error').textContent = `I don't know the word ${guess}.`;
+                $('#error').textContent = `Ich kenne das Wort ${guess} nicht.`;
                 return false;
             }
 

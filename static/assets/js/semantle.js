@@ -114,7 +114,7 @@ function solveStory(guesses, puzzleNumber) {
         for (let entry of guesses_chrono) {
             [similarity, old_guess, percentile, guess_number] = entry;
             if (percentile) {
-                first_hit = `  Mein erstes Wort in den Top 1000 war #${guess_number}.  `;
+                first_hit = ` Mein erstes Wort in den Top 1000 war #${guess_number}.  `;
                 break;
             }
         }
@@ -161,9 +161,18 @@ let Semantle = (function() {
         }
     }
 
-    async function init() {
+    async function getYesterday() {
+        const url = "/yesterday/" + puzzleNumber
+        try {
+            return (await fetch(url)).text();
+        } catch (e) {
+            return null;
+        }
+    }
 
-        //$('#yesterday').innerHTML = `Yesterday's word was <b>"${yesterday}"</b>.`;
+    async function init() {
+        let yesterday = await getYesterday()
+        $('#yesterday').innerHTML = `Das Lösungswort gestern war <b>"${yesterday}"</b>.`;
         //$('#yesterday2').innerHTML = yesterday;
 
         /*try {

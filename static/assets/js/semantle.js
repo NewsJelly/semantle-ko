@@ -85,11 +85,11 @@ function updateLocalTime() {
 function solveStory(guesses, puzzleNumber) {
     const guess_count = guesses.length;
     if (guess_count == 0) {
-        return `I gave up on Semantle ${puzzleNumber} without even guessing once.`;
+        return `Ich habe Semantlich #${puzzleNumber} aufgegeben ohne auch nur einmal zu raten. http://semantlich.johannesgaetjen.de`;
     }
 
     if (guess_count == 1) {
-        return `I got Semantle ${puzzleNumber} on my first guess!`;
+        return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! http://semantlich.johannesgaetjen.de`;
     }
 
     let describe = function(similarity, percentile) {

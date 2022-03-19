@@ -6,6 +6,7 @@
     <title>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</title>
     <script src="assets/js/semantle.js"></script>
     <script src="assets/js/clipboard.js"></script>
+    <script src="assets/js/addSpecialLetter.js"></script>
     <link rel="stylesheet" href="assets/styles.css">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -56,12 +57,16 @@
     <div id="error" style="color:#ff0000"></div>
     <form id="form" autocorrect="off" autocapitalize="none"
           autocomplete="off">
+      <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
+      <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
+      <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
+      <input type="button" value="ß" id="add-ß" onclick="addLetter('ß')" class="button">
       <div id="form-row">
         <div id="guess-wrapper">
           <input placeholder="Raten" autocorrect="off" autocapitalize="none"
           autocomplete="off"
           type="text" id="guess">
-          <input type="submit" value="Raten" id="guess-btn">
+          <input type="submit" value="Raten" id="guess-btn" class="button">
         </div>
       </div>
     </form>
@@ -73,7 +78,7 @@
     </table>
   
 
-  <input type="button" value="Aufgeben" id="give-up-btn" style="display:none;">
+  <input type="button" value="Aufgeben" id="give-up-btn" style="display:none;" class="button">
 
 <footer>
 <h3 id="faq">FAQ</h3>

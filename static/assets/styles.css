@@ -25,14 +25,10 @@ body.rules-open #rules-underlay {
     display: block;
 }
 
-#form-row {
-    align-items: center;
-    display: flex;
-    flex-direction: row-reverse;
-    flex-wrap: wrap;
-    column-gap: 20px;
-    justify-content: flex-end;
+.button {
+    color:black;
 }
+
 
 header {
     align-items: center;

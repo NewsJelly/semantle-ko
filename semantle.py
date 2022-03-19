@@ -7,7 +7,8 @@ from flask import (
     Flask,
     send_file,
     send_from_directory,
-    jsonify
+    jsonify,
+    render_template
 )
 from pytz import utc
 
@@ -90,3 +91,13 @@ def get_similarity(day: int):
 @app.route('/yesterday/<int:today>')
 def get_solution_yesterday(today: int):
     return app.secrets[(today - 1) % NUM_SECRETS]
+
+
+@app.route('/nearest1k/<int:day>')
+def get_nearest_1k(day: int):
+    if day not in app.secrets:
+        return "Die ähnlichsten Wörter für diesen Tag sind zur Zeit nicht verfügbar. Es sind immer nur höchstens" \
+               "der aktuelle, der morgige und die zwei letzten Tage verfügbar.", 404
+    solution = app.secrets[day]
+    words = [dict(word=w, rank=k[0], similarity="%0.2f" % (k[1] * 100)) for w, k in app.nearests[day].items() if w != solution]
+    return render_template('top1k.html', word=solution, words=words, day=day)

@@ -20,9 +20,7 @@ const now = Date.now();
 const today = Math.floor(Date.now() / 86400000);
 const initialDay = new Date('2022-03-18') / 86400000;
 const puzzleNumber = (today - initialDay) % numPuzzles;
-const handleStats = puzzleNumber >= 24;
-//const yesterdayPuzzleNumber = (today - initialDay + secretWords.length - 1) % secretWords.length;
-//const yesterdayPuzzleNumber = 0;
+const yesterdayPuzzleNumber = (puzzleNumber + numPuzzles - 1) % numPuzzles;
 const storage = window.localStorage;
 let chrono_forward = 1;
 let prefersDarkColorScheme = false;
@@ -173,15 +171,8 @@ let Semantle = (function() {
     async function init() {
         let yesterday = await getYesterday()
         $('#yesterday').innerHTML = `Das Lösungswort gestern war <b>"${yesterday}"</b>.`;
-        //$('#yesterday2').innerHTML = yesterday;
-
-        /*try {
-            const yesterdayNearby = await getNearby(yesterday);
-            const secretBase64 = btoa(unescape(encodeURIComponent(yesterday)));
-            $('#nearbyYesterday').innerHTML = `${yesterdayNearby.join(", ")}, in descending order of closensess. <a href="nearby_1k/${secretBase64}">More?</a>`;
-        } catch (e) {
-            $('#nearbyYesterday').innerHTML = `Coming soon!`;
-        }*/
+        $('#yesterday2').innerHTML = `Das Lösungswort gestern war <b>"${yesterday}"</b>.
+        <a href="/nearest1k/${yesterdayPuzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.`;
         updateLocalTime();
 
         try {
@@ -406,10 +397,9 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         $('#give-up-btn').style = "display:none;";
         $('#response').classList.add("gaveup");
         gameOver = true;
-        // const secretBase64 = btoa(unescape(encodeURIComponent(secret)));
         let response;
         if (won) {
-            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder.</p>`;// /* You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.*/
+            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
         } else {
             response = `<p><b>Du hast aufgegeben! </b></p>`;// The secret word is: ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`;
         }

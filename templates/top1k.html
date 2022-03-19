@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/assets/js/nearest1k.js"></script>
+    <title>Semantlich: Ähnlichste Wörter</title>
+  </head>
+  <body>
+    <div id="warning" style="display:none; ">
+      <div style="border:thin solid black; background-color: #ffdddd">
+        Vorsicht! Durch klicken auf diesen Warnhinweis wird die Lösung für das <span id="spoiler"></span> Puzzle sichtbar.
+      </div>
+    </div>
+    <div id="nearest" style="display:none;">
+      Das Lösungswort für Puzzle <b id="day">#{{day}}</b> ist <b id="word">{{word}}</b>. Die ähnlichsten Wörter sind:
+      <table >
+        <tr>
+          <th>Ähnlichkeitsrang</th>
+          <th>Wort</th>
+          <th>Ähnlichkeit</th>
+        </tr>
+        {% for word in words %}
+        <tr>
+          <td> {{word['rank']}}</td>
+          <td> {{word['word']}}</td>
+          <td> {{word['similarity']}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <br/>
+    <a href="/">Zurück zur Hauptseite</a>
+  </body>
+</html>

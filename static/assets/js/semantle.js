@@ -215,9 +215,18 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             event.stopPropagation();
         });
 
-        $('#give-up-btn').addEventListener('click', function(event) {
+        $('#give-up-btn').addEventListener('click', async function(event) {
             if (!gameOver) {
                 if (confirm("Bist du sicher, dass du aufgeben möchtest?")) {
+                    const url = '/giveup/' + puzzleNumber;
+                    //const secret = "abc"
+                    const secret = await (await fetch(url)).text();
+                    guessed.add(secret);
+                    guessCount += 1;
+                    const newEntry = [100, secret, 'Das Lösungswort', guessCount];
+                    guesses.push(newEntry);
+                    guesses.sort(function(a, b){return b[0]-a[0]});
+                    updateGuesses(guess);
                     endGame(false, true);
                 }
             }
@@ -227,7 +236,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             event.preventDefault();
             $('#guess').focus();
             $('#error').textContent = "";
-            let guess = $('#guess').value.trim().replace("!", "").replace("*", "");
+            let guess = $('#guess').value.trim().replace("!", "").replace("*", "").replace("/", "");
             if (!guess) {
                 return false;
             }
@@ -401,7 +410,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         if (won) {
             response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
         } else {
-            response = `<p><b>Du hast aufgegeben! </b></p>`;// The secret word is: ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`;
+            response = `<p><b>Du hast aufgegeben!</b> Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
         }
 
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];

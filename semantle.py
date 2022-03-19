@@ -99,5 +99,18 @@ def get_nearest_1k(day: int):
         return "Die ähnlichsten Wörter für diesen Tag sind zur Zeit nicht verfügbar. Es sind immer nur höchstens" \
                "der aktuelle, der morgige und die zwei letzten Tage verfügbar.", 404
     solution = app.secrets[day]
-    words = [dict(word=w, rank=k[0], similarity="%0.2f" % (k[1] * 100)) for w, k in app.nearests[day].items() if w != solution]
+    words = [
+        dict(
+            word=w,
+            rank=k[0],
+            similarity="%0.2f" % (k[1] * 100))
+        for w, k in app.nearests[day].items() if w != solution]
     return render_template('top1k.html', word=solution, words=words, day=day)
+
+
+@app.route('/giveup/<int:day>')
+def give_up(day: int):
+    if day not in app.secrets:
+        return 'Rick Astley would be disappointed', 404
+    else:
+        return app.secrets[day]

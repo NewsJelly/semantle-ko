@@ -400,7 +400,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         // const secretBase64 = btoa(unescape(encodeURIComponent(secret)));
         let response;
         if (won) {
-            response = `<p><b>Du hast es in ${guesses.length} gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder.</p>`;// /* You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.*/
+            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder.</p>`;// /* You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.*/
         } else {
             response = `<p><b>Du hast aufgegeben! </b></p>`;// The secret word is: ${secret}</b>.  Feel free to keep entering words if you are curious about the similarity to other words.  You can see the nearest words <a href="nearby_1k/${secretBase64}">here</a>.</p>`;
         }

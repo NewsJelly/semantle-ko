@@ -10,7 +10,6 @@
 'use strict';
 
 let gameOver = false;
-let firstGuess = true;
 let guesses = [];
 let guessed = new Set();
 let guessCount = 0;
@@ -106,7 +105,12 @@ function solveStory(guesses, puzzleNumber) {
     let [similarity, old_guess, percentile, guess_number] = guesses_chrono[0];
     let first_guess = `My first guess ${describe(similarity, percentile)}.`;
     let first_guess_in_top = !!percentile;
-
+    let time = storage.getItem('endTime') - storage.getItem('startTime');
+    let timeFormatted = new Date(time).toISOString().substr(11, 8);
+    let timeInfo = `Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}h vergangen.`
+    if (time > 24 * 3600000) {
+        timeInfo = 'Ich habe über 24 Stunden gebraucht.'
+    }
     let first_hit = '';
     if (!first_guess_in_top) {
         for (let entry of guesses_chrono) {
@@ -122,7 +126,8 @@ function solveStory(guesses, puzzleNumber) {
     [similarity, old_guess, percentile, guess_number] = penultimate_guess;
     const penultimate_guess_msg = `Mein vorletzter Versuch ${describe(similarity, percentile)}.`;
 
-    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} Versuchen erraten. http://semantlich.johannesgaetjen.de`;
+    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} ` +
+    `Versuchen gelöst. ${timeInfo} http://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -191,6 +196,8 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         if (storagePuzzleNumber != puzzleNumber) {
             storage.removeItem("guesses");
             storage.removeItem("winState");
+            storage.removeItem("startTime");
+            storage.removeItem("endTime");
             storage.setItem("puzzleNumber", puzzleNumber);
         }
 
@@ -255,6 +262,9 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             let percentile = guessData.rank;
             let similarity = guessData.sim * 100.0;
             if (!guessed.has(guess)) {
+                if (guessCount == 0) {
+                    storage.setItem('startTime', Date.now())
+                }
                 guessCount += 1;
                 guessed.add(guess);
 
@@ -277,7 +287,6 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
             updateGuesses(guess);
 
-            firstGuess = false;
             if (guessData.sim == 1 && !gameOver) {
                 endGame(true, true);
             }
@@ -385,6 +394,9 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
     function endGame(won, countStats) {
         let stats = getStats();
+        if (storage.getItem('endTime') == null) {
+            storage.setItem('endTime', Date.now())
+        }
         if (countStats) {
             const onStreak = (stats['lastEnd'] == puzzleNumber - 1);
 

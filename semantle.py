@@ -96,7 +96,7 @@ def get_solution_yesterday(today: int):
 @app.route('/nearest1k/<int:day>')
 def get_nearest_1k(day: int):
     if day not in app.secrets:
-        return "Die ähnlichsten Wörter für diesen Tag sind zur Zeit nicht verfügbar. Es sind immer nur höchstens" \
+        return "Die ähnlichsten Wörter für diesen Tag sind zur Zeit nicht verfügbar. Es sind immer nur höchstens " \
                "der aktuelle, der morgige und die zwei letzten Tage verfügbar.", 404
     solution = app.secrets[day]
     words = [

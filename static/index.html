@@ -39,11 +39,10 @@
                 Wörtern ist wird der Rang angezeigt.
             </p>
             <p>
-                Im zugrunde liegenden Datensatz wurden alle Wörter kleingeschrieben (auch Nomen und Eigennamen), also
-                werden auch alle Eingaben automatisch zu Kleinbuchstaben konvertiert. Das Lösungswort ist immer
-                <b>ohne</b>
-                Bindestrich (wie Rheinland-Pfalz) oder Akzente (wie Café) und ist (sofern eindeutig) in der
-                grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches Lösungswort).
+                Groß- und Kleinschreibung werden berücksichtigt! "Der Anstieg" ist etwas anderes als wenn "die Temperatur
+                anstieg". Das Lösungswort ist immer <b>ohne</b> Bindestrich (wie Rheinland-Pfalz) oder Akzente (wie Café)
+                und ist (sofern eindeutig) in der grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches
+                Lösungswort).
             </p>
             <p>
                 Immer um 0:00 Uhr UTC, <span id="localtime"></span>, gibt es ein neues Lösungswort. <span
@@ -55,10 +54,25 @@
         </div>
     </div>
 </div>
+<div style="border:thin solid black; background-color: #ffdddd; color:black">
+    <p>Achtung, wichtige Information für diejenigen, die nicht zum ersten mal spielen: Mit Puzzle #5 habe ich den
+        Datensatz zur Berechnung der Ähnlichkeiten ausgetauscht. Ich hoffe die Werte ergeben so mehr Sinn und es wird
+        etwas einfacher. Ich werde das über die nächsten Tage beobachten. Für Fragen oder Feedback könnt ihr mich auch
+        auf <a href="https://old.reddit.com/user/JohannesGaetjen/">Reddit kontaktiern</a>.
+    </p>
+    <p>
+        Für euch wichtig zu wissen ist, dass jetzt <b>Groß- und Kleinschreibung berücksichtigt werden</b>. Die möglichen
+        Lösungswörter wurden auch neu zusammengestellt, zum einen um auch die Groß- und Kleinschreibung zu
+        berücksichtigen, zum anderen weil ich eine Liste gefunden habe, die meines Erachtens besser ist.
+    </p>
+</div>
 <p id="similarity-story"></p>
 <div id="error" style="color:#ff0000"></div>
 <form id="form" autocorrect="off" autocapitalize="none"
       autocomplete="off">
+    <input type="button" value="Ä" id="add-ä-cap" onclick="addLetter('Ä')" class="button">
+    <input type="button" value="Ö" id="add-ö-cap" onclick="addLetter('Ö')" class="button">
+    <input type="button" value="Ü" id="add-ü-cap" onclick="addLetter('Ü')" class="button">
     <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
     <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
     <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
@@ -90,47 +104,18 @@
         <span id="yesterday2"></span>
     </p>
 
-    <p><b>Warum sind die Ähnlichkeiten so viel höher als im Englischen Semantle?</b></p>
-    <p>
-        Nicht sicher, aber ich habe zwei Vermutungen:
-    <ul>
-        <li>
-            Der deutsche Word2Vec Datensatz hat nur 100 Dimensionen, wohingegen der englische 300 hat.
-        </li>
-        <li>
-            Die Parameter beim Trainieren wurden anders gewählt, sodass sich höhere Ähnlichkeiten ergeben.
-        </li>
-    </ul>
-    </p>
-
+    <!--
     <p><b>Ist die deutsche Version schwieriger als die englische?</b></p>
     <p>
         Sicher lässt es sich nicht sagen, aber mein Eindruck ist ja. Ich persönlich brauche im Schnitt jedenfalls
         mehr Versuche, als im Englischen.
     </p>
-
-    <p><b>Warum ist die deutsche Version schwieriger?</b></p>
-    <p>
-        Mögliche Faktoren, die dazu beitragen:
-    <ul>
-        <li>Der Word2Vec Datensatz ist möglicherweise nicht so gut trainiert, sodass man nicht so gut in Richtung der
-            Lösung geführt wird.
-        </li>
-        <li>Deutsch hat viele zusammengesetzte Wörter. Die haben dann eine hohe Ähnlichkeit, man kommt aber nicht drauf
-            wenn man nicht sowieso das Lösungswort kennt. Zum Beispiel sind 16 der 30 ähnlichsten Wörter zu
-            "Vereinbarung" solche, die selbst "vereinbarung" beinhalten (Zusatzvereinbarung, Einzelvereinbarung usw.).
-        </li>
-    </ul>
-    </p>
-
+    -->
 
     <p><b>Wie wurden die möglichen Lösungswörter ausgewählt?</b></p>
-    <p>Ich habe die 5000 häufigsten Wörter aus der <a
-            href="https://www.ids-mannheim.de/digspra/kl/projekte/methoden/derewo">
-        Korpusbasierte Wortgrundformenliste DeReWo v-ww-bll-320000g-2012-12-31-1.0</a> genommen, und Wörter mit
-        Bindestrich
-        oder Akzenten entfernt (z.B. Café), sowie bei Wörtern, wo mehrere Grundformen möglich sind (z.B. zweitbeste,
-        zweitbester, zweitbestes) eins davon zufällig ausgewählt.
+    <p>Ich habe die Liste der häufigsten Wörter der deutschen Sprache von <a
+            href="https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/A_Frequency_Dictionary_of_German">Wiktionary</a>
+        genommen, und Wörter mit Bindestrich, Leerzeichen oder Akzenten entfernt.
     </p>
 
     <p><b>Quellcode?</b></p>
@@ -138,10 +123,8 @@
         <a href="https://github.com/gaetjen/semantle-de">Voilà.</a>
     </p>
 
-    <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von
-        Johannes
-        Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed
-            und A. Mehler.</a>
+    <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von Johannes
+        Gätjen. Word embeddings von <a href="https://fasttext.cc/docs/en/crawl-vectors.html">FastText</a>.
     </div>
 
 </footer>

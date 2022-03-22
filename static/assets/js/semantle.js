@@ -243,11 +243,10 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             event.preventDefault();
             $('#guess').focus();
             $('#error').textContent = "";
-            let guess = $('#guess').value.trim().replace("!", "").replace("*", "").replace("/", "");
+            let guess = $('#guess').value.trim().replace("!", "").replace("*", "").replaceAll("/", "");
             if (!guess) {
                 return false;
             }
-            guess = guess.toLowerCase();
 
             $('#guess').value = "";
 
@@ -420,7 +419,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b>. Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
+            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b> Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
         } else {
             response = `<p><b>Du hast aufgegeben!</b> Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
         }

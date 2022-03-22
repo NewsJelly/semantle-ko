@@ -8,23 +8,28 @@ from numpy import array
 
 def valid_guess(s: str) -> bool:
     if all(c.isalpha() or c in '.-' for c in s):
-        if all(c in '.-' for c in s):
-            return False
-        else:
-            return True
+        return any(c.isalpha() for c in s)
     else:
         return False
 
 
+def only_normal_letters(word: str, allow_capitalization:bool = False) -> bool:
+    lowers = set(c for c in 'abcdefghijklmnopqrstuvwxyzäöǘß')
+    uppers = set(c for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ')
+    both = lowers.union(uppers)
+    if allow_capitalization:
+        return all(c in both for c in word)
+    else:
+        return all(c in lowers for c in word)
+
+
 def load_dic(path: str, allow_capitalization: bool = False) -> Set[str]:
     rtn = set()
-    letters = set(c for c in 'abcdefghijklmnopqrstuvwxyzäöǘß')
-    start_idx = 1 if allow_capitalization else 0
     with open(path, 'r', encoding='utf-16') as f:
         for line in f.readlines():
-            word = line.strip().lower() if not allow_capitalization else line.strip()
-            if all(c in letters for c in word[start_idx:]):
-                rtn.add(word)
+            word = line.strip()
+            if only_normal_letters(word, allow_capitalization):
+               rtn.add(word)
     return rtn
 
 
@@ -33,19 +38,20 @@ if __name__ == '__main__':
     cursor = connection.cursor()
     cursor.execute("""CREATE TABLE IF NOT EXISTS guesses (word text PRIMARY KEY, vec blob)""")
     print("created table")
-    known_words = load_dic('data/de.dic')
-    print("# words in dictionary:", len(known_words))
+    normal_words = load_dic('data/de.dic', True)
+    print("# words in dictionary:", len(normal_words))
     valid_nearest = []
     valid_nearest_mat = None
-    with open('data/COW.token.wang2vec', 'r', encoding='utf-8') as w2v_file:
+    eliminated = 0
+    with open('data/cc.de.300.vec', 'r', encoding='utf-8') as w2v_file:
         _ = w2v_file.readline()
         for n, line in enumerate(w2v_file):
             # careful! some data sets (e.g. dewiki100.txt) have non-breaking spaces, which get split
             # others have trailing spaces (e.g. COW.token.wang2vec), meaning an empty string is included with split(' ')
-            words = line.split()
+            words = line.rstrip().split(' ')
             word = words[0]
             vec = array([float(w1) for w1 in words[1:]])
-            if word in known_words:
+            if word in normal_words:
                 valid_nearest.append(word)
                 if valid_nearest_mat is None:
                     valid_nearest_mat = [vec]
@@ -53,11 +59,14 @@ if __name__ == '__main__':
                     valid_nearest_mat.append(vec)
             if valid_guess(word):
                 cursor.execute("""INSERT INTO guesses values (?, ?)""", (word, pickle.dumps(vec)))
+            else:
+                eliminated += 1
             if n % 100000 == 0:
                 print(f"processed {n} (+1) lines")
                 connection.commit()
     connection.commit()
     connection.close()
+    print("invalid:", eliminated)
     valid_nearest_mat = np.array(valid_nearest_mat)
     print("valid nearest shape:", valid_nearest_mat.shape)
     with open('data/valid_nearest.dat', 'wb') as f:

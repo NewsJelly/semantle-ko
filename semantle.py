@@ -42,10 +42,11 @@ def update_nearest():
     print("scheduled stuff triggered!")
     next_puzzle = ((datetime.utcnow().date() - FIRST_DAY).days + 1) % NUM_SECRETS
     next_word = secrets[next_puzzle]
-    if next_puzzle - 3 in app.secrets:
-        del app.secrets[next_puzzle - 3]
-    if next_puzzle - 3 in app.nearests:
-        del app.nearests[next_puzzle - 3]
+    to_delete = (next_puzzle - 4) % NUM_SECRETS
+    if to_delete in app.secrets:
+        del app.secrets[to_delete]
+    if to_delete in app.nearests:
+        del app.nearests[to_delete]
     app.secrets[next_puzzle] = next_word
     app.nearests[next_puzzle] = get_nearest(next_puzzle, next_word, valid_nearest_words, valid_nearest_vecs)
 

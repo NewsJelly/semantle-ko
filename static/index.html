@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</title>
@@ -21,96 +21,129 @@
 
     You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 -->
-  </head>
-  <body>
-    <header>
-      <h2>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</h2>
-      <button aria-label="Rules" id="rules-button">?</button>
-    </header>
-    <div id="rules-underlay">
-      <div id="rules" aria-labelledby="rules-heading" aria-modal="true">
+</head>
+<body>
+<header>
+    <h2>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</h2>
+    <button aria-label="Rules" id="rules-button">?</button>
+</header>
+<div id="rules-underlay">
+    <div id="rules" aria-labelledby="rules-heading" aria-modal="true">
         <button id="rules-close" aria-label="Close">&times;</button>
         <div id="rules-content">
-          <h3 id="rules-heading">Errate das geheime Lösungswort</h3>
-          <p>
-            Gebe einzelne Wörter ein (Bindestriche und Punkte sind erlaubt) und erhalte Information zur semantischen
-            Ähnlichkeit zum gesuchten Wort. Es wird zum einen die Ähnlichkeit auf einer Skala von -100 bis +100
-            angegeben (wobei Werte unter 0 eher selten sind), und falls das geratene Wort unter den 1000 ähnlichsten
-            Wörtern ist wird der Rang angezeigt.
-          </p>
-          <p>
-            Im zugrunde liegenden Datensatz wurden alle Wörter kleingeschrieben (auch Nomen und Eigennamen), also
-            werden auch alle Eingaben automatisch zu Kleinbuchstaben konvertiert. Das Lösungswort ist immer <b>ohne</b>
-            Bindestrich (wie Rheinland-Pfalz) oder Akzente (wie Café) und ist (sofern eindeutig) in der
-            grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches Lösungswort).
-          </p>
-          <p>
-            Immer um 0:00 Uhr UTC, <span id="localtime"></span>, gibt es ein neues Lösungswort. <span id="yesterday"></span>
-          </p>
-          <p>
-            Diese Seite verwendet Cookies um den Spielfortschritt und -statistiken zu speichern.
-          </p>
+            <h3 id="rules-heading">Errate das geheime Lösungswort</h3>
+            <p>
+                Gebe einzelne Wörter ein (Bindestriche und Punkte sind erlaubt) und erhalte Information zur semantischen
+                Ähnlichkeit zum gesuchten Wort. Es wird zum einen die Ähnlichkeit auf einer Skala von -100 bis +100
+                angegeben (wobei Werte unter 0 eher selten sind), und falls das geratene Wort unter den 1000 ähnlichsten
+                Wörtern ist wird der Rang angezeigt.
+            </p>
+            <p>
+                Im zugrunde liegenden Datensatz wurden alle Wörter kleingeschrieben (auch Nomen und Eigennamen), also
+                werden auch alle Eingaben automatisch zu Kleinbuchstaben konvertiert. Das Lösungswort ist immer
+                <b>ohne</b>
+                Bindestrich (wie Rheinland-Pfalz) oder Akzente (wie Café) und ist (sofern eindeutig) in der
+                grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches Lösungswort).
+            </p>
+            <p>
+                Immer um 0:00 Uhr UTC, <span id="localtime"></span>, gibt es ein neues Lösungswort. <span
+                    id="yesterday"></span>
+            </p>
+            <p>
+                Diese Seite verwendet Cookies um den Spielfortschritt und -statistiken zu speichern.
+            </p>
         </div>
-      </div>
     </div>
-    <p id="similarity-story"> </p>
-    <div id="error" style="color:#ff0000"></div>
-    <form id="form" autocorrect="off" autocapitalize="none"
-          autocomplete="off">
-      <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
-      <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
-      <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
-      <input type="button" value="ß" id="add-ß" onclick="addLetter('ß')" class="button">
-      <div id="form-row">
+</div>
+<p id="similarity-story"></p>
+<div id="error" style="color:#ff0000"></div>
+<form id="form" autocorrect="off" autocapitalize="none"
+      autocomplete="off">
+    <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
+    <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
+    <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
+    <input type="button" value="ß" id="add-ß" onclick="addLetter('ß')" class="button">
+    <div id="form-row">
         <div id="guess-wrapper">
-          <input placeholder="Raten" autocorrect="off" autocapitalize="none"
-          autocomplete="off"
-          type="text" id="guess">
-          <input type="submit" value="Raten" id="guess-btn" class="button">
+            <input placeholder="Raten" autocorrect="off" autocapitalize="none"
+                   autocomplete="off"
+                   type="text" id="guess">
+            <input type="submit" value="Raten" id="guess-btn" class="button">
         </div>
-      </div>
-    </form>
-    <div id="response"></div>
-    <div style="display:none">
-      <input type="text" id="share" />
     </div>
-    <table id="guesses">
-    </table>
-  
+</form>
+<div id="response"></div>
+<div style="display:none">
+    <input type="text" id="share"/>
+</div>
+<table id="guesses">
+</table>
 
-  <input type="button" value="Aufgeben" id="give-up-btn"" class="button">
+
+<input type="button" value="Aufgeben" id="give-up-btn" class="button">
 
 <footer>
-<h3 id="faq">FAQ</h3>
+    <h3 id="faq">Fragen und Antworten</h3>
 
-  <p><b>Was war das Lösungswort gestern?</b></p>
-  <p>
-    <span id="yesterday2"></span>
-  </p>
+    <p><b>Was war das Lösungswort gestern?</b></p>
+    <p>
+        <span id="yesterday2"></span>
+    </p>
 
-  <p><b>Warum sind die Ähnlichkeiten so viel höher als im Englischen Semantle?</b></p>
-  <p>
-    Nicht sicher, aber ich habe zwei Vermutungen: 1. Der deutsche Word2Vec Datensatz hat nur 100 Dimensionen,
-    wohingegen der englische 300 hat. 2. Die Parameter beim Trainieren wurden anders gewählt, sodass sich
-    höhere Ähnlichkeiten ergeben.
-  </p>
+    <p><b>Warum sind die Ähnlichkeiten so viel höher als im Englischen Semantle?</b></p>
+    <p>
+        Nicht sicher, aber ich habe zwei Vermutungen:
+    <ul>
+        <li>
+            Der deutsche Word2Vec Datensatz hat nur 100 Dimensionen, wohingegen der englische 300 hat.
+        </li>
+        <li>
+            Die Parameter beim Trainieren wurden anders gewählt, sodass sich höhere Ähnlichkeiten ergeben.
+        </li>
+    </ul>
+    </p>
 
-  <p><b>Wie wurden die möglichen Lösungswörter ausgewählt?</b></p>
-  <p>Ich habe die 5000 häufigsten Wörter aus der <a href ="https://www.ids-mannheim.de/digspra/kl/projekte/methoden/derewo">
-    Korpusbasierte Wortgrundformenliste DeReWo v-ww-bll-320000g-2012-12-31-1.0</a> genommen, und Wörter mit Bindestrich
-    oder Akzenten entfernt (z.B. Café), sowie bei Wörtern, wo mehrere Grundformen möglich sind (z.B. zweitbeste,
-    zweitbester, zweitbestes) eins davon zufällig ausgewählt.
-  </p>
+    <p><b>Ist die deutsche Version schwieriger als die englische?</b></p>
+    <p>
+        Sicher lässt es sich nicht sagen, aber mein Eindruck ist ja. Ich persönlich brauche im Schnitt jedenfalls
+        mehr Versuche, als im Englischen.
+    </p>
 
-  <p><b>Quellcode?</b></p>
-  <p>
-    <a href="https://github.com/gaetjen/semantle-de">Voilà.</a>
-  </p>
+    <p><b>Warum ist die deutsche Version schwieriger?</b></p>
+    <p>
+        Mögliche Faktoren, die dazu beitragen:
+    <ul>
+        <li>Der Word2Vec Datensatz ist möglicherweise nicht so gut trainiert, sodass man nicht so gut in Richtung der
+            Lösung geführt wird.
+        </li>
+        <li>Deutsch hat viele zusammengesetzte Wörter. Die haben dann eine hohe Ähnlichkeit, man kommt aber nicht drauf
+            wenn man nicht sowieso das Lösungswort kennt. Zum Beispiel sind 16 der 30 ähnlichsten Wörter zu
+            "Vereinbarung" solche, die selbst "vereinbarung" beinhalten (Zusatzvereinbarung, Einzelvereinbarung usw.).
+        </li>
+    </ul>
+    </p>
 
-  <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von Johannes
-    Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed und A. Mehler.</a>
-  </div>
+
+    <p><b>Wie wurden die möglichen Lösungswörter ausgewählt?</b></p>
+    <p>Ich habe die 5000 häufigsten Wörter aus der <a
+            href="https://www.ids-mannheim.de/digspra/kl/projekte/methoden/derewo">
+        Korpusbasierte Wortgrundformenliste DeReWo v-ww-bll-320000g-2012-12-31-1.0</a> genommen, und Wörter mit
+        Bindestrich
+        oder Akzenten entfernt (z.B. Café), sowie bei Wörtern, wo mehrere Grundformen möglich sind (z.B. zweitbeste,
+        zweitbester, zweitbestes) eins davon zufällig ausgewählt.
+    </p>
+
+    <p><b>Quellcode?</b></p>
+    <p>
+        <a href="https://github.com/gaetjen/semantle-de">Voilà.</a>
+    </p>
+
+    <div><a href="https://semantle.novalis.org">Original Semantle</a> von David Turner. Deutsche Version von
+        Johannes
+        Gätjen. Vortrainierte Word2Vec Daten von <a href="https://www.texttechnologylab.org/resources2018/">S. Ahmed
+            und A. Mehler.</a>
+    </div>
 
 </footer>
-  </body>
+</body>
 </html>

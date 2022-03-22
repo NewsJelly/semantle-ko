@@ -704,18 +704,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 -----------------------
-Word2Vec data from S. Ahmed and A. Mehler, “Resource-Size matters: Improving
-Neural Named Entity Recognition with Optimized Large Corpora,” in Proceedings of the
-17th IEEE International Conference on Machine Learning and Applications (ICMLA),2018.
-
-https://www.texttechnologylab.org/resources2018/
------------------------
 German spelling dictionary from WinEdt.org published under GNU GPL: https://www.winedt.org/dict.html
 -----------------------
-for secrets.txt:
-
-Based on frequency dictionary DeReWo published under Creative Commons (by-nc): https://creativecommons.org/licenses/by-nc/3.0/deed.de
-
-Korpusbasierte Wortgrundformenliste DEREWO, v-ww-bll-320000g-2012-12-31-1.0, mit Benutzerdokumentation,
-http://www.ids-mannheim.de/derewo,
-© Institut für Deutsche Sprache, Programmbereich Korpuslinguistik, Mannheim, Deutschland, 2013.
+Word embeddings from FastText, published under Creative Commons Attribution-Share-Alike License 3.0
+https://creativecommons.org/licenses/by-sa/3.0/
+https://fasttext.cc/docs/en/crawl-vectors.html
+-----------------------
+for frequent_words.txt
+From Wiktionary, published under Creative Commons Attribution-Share-Alike License 3.0
+https://creativecommons.org/licenses/by-sa/3.0/
+https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/A_Frequency_Dictionary_of_German

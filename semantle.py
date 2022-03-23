@@ -68,9 +68,9 @@ def send_static(path):
 
 @app.route('/guess/<int:day>/<string:word>')
 def get_guess(day: int, word: str):
-    rtn = {"guess": word}
     if app.secrets[day].lower() == word.lower():
         word = app.secrets[day]
+    rtn = {"guess": word}
     # check most similar
     if day in app.nearests and word in app.nearests[day]:
         rtn["sim"] = app.nearests[day][word][1]

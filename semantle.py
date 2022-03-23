@@ -80,7 +80,7 @@ def get_guess(day: int, word: str):
             rtn["sim"] = word2vec.similarity(app.secrets[day], word)
             rtn["rank"] = "(kalt)"
         except KeyError:
-            return 'Word unknown', 404
+            return jsonify({"error": "unknown"}), 404
     return jsonify(rtn)
 
 

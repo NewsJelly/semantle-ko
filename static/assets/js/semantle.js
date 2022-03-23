@@ -226,7 +226,6 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             if (!gameOver) {
                 if (confirm("Bist du sicher, dass du aufgeben möchtest?")) {
                     const url = '/giveup/' + puzzleNumber;
-                    //const secret = "abc"
                     const secret = await (await fetch(url)).text();
                     guessed.add(secret);
                     guessCount += 1;
@@ -251,10 +250,14 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             $('#guess').value = "";
 
             const guessData = await submitGuess(guess);
-            if (!guessData) {
+            if (guessData.error == "unknown") {
                 $('#error').textContent = `Ich kenne das Wort ${guess} nicht.`;
                 return false;
             }
+            if (!guessData) {
+                $('#error').textContent = `Keine Antwort vom Server erhalten. Bitte versuche es später nochmal.`
+            }
+
             guess = guessData.guess
             cache[guess] = guessData;
 

@@ -255,7 +255,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
                 $('#error').textContent = `Ich kenne das Wort ${guess} nicht.`;
                 return false;
             }
-
+            guess = guessData.guess
             cache[guess] = guessData;
 
             let percentile = guessData.rank;

@@ -246,6 +246,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         $('#enable-umlauts').addEventListener('click', function(event) {
             storage.setItem('enableUmlauts', event.target.checked);
             enableUmlauts = event.target.checked;
+            toggleUmlautButtons(enableUmlauts);
         });
 
         if (darkMode) {
@@ -260,6 +261,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         if (enableUmlauts) {
             $('#enable-umlauts').checked = true;
         }
+        toggleUmlautButtons(enableUmlauts);
 
         $('#give-up-btn').addEventListener('click', async function(event) {
             if (!gameOver) {
@@ -405,6 +407,14 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     function checkMedia() {
         let darkMode = storage.getItem("darkMode") === 'true';
         toggleDarkMode(darkMode);
+    }
+
+    function toggleUmlautButtons(on) {
+        if (on) {
+            $('#umlaut-buttons').style="";
+        } else {
+            $('#umlaut-buttons').style="display:none";
+        }
     }
 
     function saveGame(guessCount, winState) {

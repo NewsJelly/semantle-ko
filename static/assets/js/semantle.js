@@ -106,8 +106,8 @@ function solveStory(guesses, puzzleNumber) {
     let first_guess = `My first guess ${describe(similarity, percentile)}.`;
     let first_guess_in_top = !!percentile;
     let time = storage.getItem('endTime') - storage.getItem('startTime');
-    let timeFormatted = new Date(time).toISOString().substr(11, 8);
-    let timeInfo = `Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}h vergangen.`
+    let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
+    let timeInfo = `Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}s vergangen.`
     if (time > 24 * 3600000) {
         timeInfo = 'Ich habe über 24 Stunden gebraucht.'
     }

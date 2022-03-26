@@ -17,7 +17,7 @@ body {
     padding: 1em;
 }
 
-body.rules-open {
+body.dialog-open {
     overflow: hidden;
 }
 
@@ -25,6 +25,9 @@ body.rules-open #rules-underlay {
     display: block;
 }
 
+body.settings-open #settings-underlay {
+    display: block;
+}
 
 header {
     align-items: center;
@@ -36,14 +39,18 @@ h2 {
     margin: 0;
 }
 
-#rules-button,
-#rules-close {
+#menu {
+    display: flex;
+    column-gap: .5em;
+}
+
+#menu .dialog-close {
     background: transparent;
     color: black;
     padding: 0;
 }
 
-#rules-button {
+.overlay-button {
     border: 2px solid black;
     border-radius: 50%;
     height: 2em;
@@ -51,7 +58,9 @@ h2 {
     width: 2em;
 }
 
-#rules-underlay {
+
+
+.dialog-underlay {
     background: rgba(0,0,0,.5);
     bottom: 0;
     display: none;
@@ -61,7 +70,7 @@ h2 {
     top: 0;
 }
 
-#rules {
+.dialog {
     background: white;
     left: 2em;
     margin-bottom: 2em;
@@ -75,8 +84,8 @@ h2 {
     z-index: 1;
 }
 
-#rules-close {
-    border: none;
+.dialog-close {
+    color:black;
     font-size: 2em;
     height: 1em;
     line-height: 1em;
@@ -87,17 +96,17 @@ h2 {
     z-index: 2;
 }
 
-#rules-content {
+.dialog-content {
     max-height: calc(100vh - 4em);
     padding: 2em;
     overflow: auto;
 }
 
-#rules-heading {
+.dialog-content > *:first-child {
     margin-top: 0;
 }
 
-#rules-content > *:last-child {
+.dialog-content > *:last-child {
     margin-bottom: 0;
 }
 
@@ -200,10 +209,6 @@ footer {
         font-size: 14px;
     }
 
-    #guess-wrapper {
-        flex-grow: 1;
-    }
-
     table {
         width: 100%;
     }
@@ -213,35 +218,41 @@ footer {
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background: #111;
-        color: #fafafa;
-        color-scheme: dark;
-    }
+/* Dark mode */
+body.dark {
+    background: #111;
+    color: #fafafa;
+    color-scheme: dark;
+}
 
-    a {
-        color: #9af;
-    }
+body.dark a {
+    color: #9af;
+}
 
-    #rules-button {
-        border-color: #fafafa;
-        color: #fafafa;
-    }
+body.dark .dialog {
+    background: #333;
+}
 
-    #rules {
-        background: #333;
-    }
+body.dark .dialog-close {
+    color: #fafafa;
+}
 
-    #rules-close {
-        color: #fafafa;
-    }
+body.dark .progress-container {
+    background: #333;
+}
 
-    .progress-container {
-        background: #333;
-    }
+body.dark .gaveup {
+    background: #334;
+}
 
-    .gaveup {
-        background: #334;
-    }
-  }
+body.dark .weirdWord {
+    border-color: #fafafa;
+}
+
+body.dark .overlay-button {
+    border: 2px solid white;
+    border-radius: 50%;
+    height: 2em;
+    font-weight: bold;
+    width: 2em;
+}

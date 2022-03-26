@@ -23,6 +23,11 @@ const yesterdayPuzzleNumber = (puzzleNumber + numPuzzles - 1) % numPuzzles;
 const storage = window.localStorage;
 let chrono_forward = 1;
 let prefersDarkColorScheme = false;
+// settings
+let darkMode = storage.getItem("darkMode") === 'true' ? true: false;
+let shareNumber = true;
+let shareTime = true;
+let showUmlauts = true;
 
 function $(id) {
     if (id.charAt(0) !== '#') return false;
@@ -64,7 +69,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let color;
     if (oldGuess === guess) {
         color = '#c0c';
-    } else if (prefersDarkColorScheme) {
+    } else if (darkMode) {
         color = '#fafafa';
     } else {
         color = '#000';
@@ -210,17 +215,31 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         }
 
         $("#rules-button").addEventListener('click', openRules);
+        $("#settings-button").addEventListener('click', openSettings);
 
-        [$("#rules-underlay"), $("#rules-close")].forEach((el) => {
+        document.querySelectorAll(".dialog-underlay, .dialog-close").forEach((el) => {
             el.addEventListener('click', () => {
-                document.body.classList.remove('rules-open');
+                document.body.classList.remove('dialog-content', 'rules-open', 'settings-open');
             });
         });
 
-        $("#rules").addEventListener("click", (event) => {
-            // prevents click from propagating to the underlay, which closes the rules
-            event.stopPropagation();
+        document.querySelectorAll(".dialog").forEach((el) => {
+            el.addEventListener("click", (event) => {
+                // prevents click from propagating to the underlay, which closes the rules
+                event.stopPropagation();
+            });
         });
+
+        $('#dark-mode').addEventListener('click', function(event) {
+            storage.setItem('darkMode', event.target.checked);
+            toggleDarkMode(event.target.checked);
+        });
+
+        toggleDarkMode(darkMode);
+
+        if (darkMode) {
+            $('#dark-mode').checked = true;
+        }
 
         $('#give-up-btn').addEventListener('click', async function(event) {
             if (!gameOver) {
@@ -310,8 +329,12 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     }
 
     function openRules() {
-        document.body.classList.add('rules-open');
+        document.body.classList.add('dialog-open', 'rules-open');
         storage.setItem("readRules", true);
+    }
+
+    function openSettings() {
+        document.body.classList.add('dialog-open', 'settings-open');
     }
 
     function updateGuesses(guess) {
@@ -349,6 +372,20 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         });
     }
 
+    function toggleDarkMode(on) {
+        document.body.classList[on ? 'add' : 'remove']('dark');
+        const darkModeCheckbox = $("#dark-mode");
+        darkMode = on;
+        // this runs before the DOM is ready, so we need to check
+        if (darkModeCheckbox) {
+            darkModeCheckbox.checked = on;
+        }
+    }
+
+    function checkMedia() {
+        let darkMode = storage.getItem("darkMode") === 'true' ? true: false;
+        toggleDarkMode(darkMode);
+    }
 
     function saveGame(guessCount, winState) {
         // If we are in a tab still open from yesterday, we're done here.
@@ -448,8 +485,13 @@ Statistik: <br/>
     }
 
     return {
-        init: init
+        init: init,
+        checkMedia: checkMedia,
     };
 })();
+
+// do this when the file loads instead of waiting for DOM to be ready to avoid
+// a flash of unstyled content
+Semantle.checkMedia();
     
 window.addEventListener('load', async () => { Semantle.init() });

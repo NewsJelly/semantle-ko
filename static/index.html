@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</title>
-    <script src="assets/js/semantle.js"></script>
     <script src="assets/js/clipboard.js"></script>
     <script src="assets/js/addSpecialLetter.js"></script>
     <link rel="stylesheet" href="assets/styles.css">
@@ -23,14 +22,19 @@
 -->
 </head>
 <body>
+<!-- include script here so that we can set dark mode of body on initialization -->
+<script src="assets/js/semantle.js"></script>
 <header>
     <h2>Semantlich — Das Wortbedeutungsähnlichkeitsratespiel</h2>
-    <button aria-label="Rules" id="rules-button">?</button>
+    <nav id="menu">
+        <button aria-label="Settings" class="overlay-button" id="settings-button">⚙</button>
+        <button aria-label="Rules" class="overlay-button" id="rules-button">?</button>
+    </nav>
 </header>
-<div id="rules-underlay">
-    <div id="rules" aria-labelledby="rules-heading" aria-modal="true">
-        <button id="rules-close" aria-label="Close">&times;</button>
-        <div id="rules-content">
+<div class="dialog-underlay" id="rules-underlay">
+    <div class="dialog" id="rules" aria-labelledby="rules-heading" aria-modal="true" role="dialog">
+        <button class="dialog-close" id="rules-close" aria-label="Schließen">&times;</button>
+        <div class="dialog-content" id="rules-content">
             <h3 id="rules-heading">Errate das geheime Lösungswort</h3>
             <p>
                 Gebe einzelne Wörter ein (Bindestriche und Punkte sind erlaubt) und erhalte Information zur semantischen
@@ -39,9 +43,9 @@
                 Wörtern ist wird der Rang angezeigt.
             </p>
             <p>
-                Groß- und Kleinschreibung werden berücksichtigt! "Der Anstieg" ist etwas anderes als wenn "die Temperatur
-                anstieg". Das Lösungswort ist immer <b>ohne</b> Bindestrich (wie Rheinland-Pfalz) oder Akzente (wie Café)
-                und ist (sofern eindeutig) in der grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches
+                Groß- und Kleinschreibung werden berücksichtigt! "Der Anstieg" ist etwas anderes als wenn "die
+                Temperatur anstieg". Das Lösungswort ist immer <b>ohne</b> Bindestrich (wie Rheinland-Pfalz) oder
+                Akzente (wie Café) und ist in der grammatikalischen Grundform (z.B. ist "sprichst" kein mögliches
                 Lösungswort).
             </p>
             <p>
@@ -49,34 +53,48 @@
                     id="yesterday"></span>
             </p>
             <p>
-                Diese Seite verwendet Cookies um den Spielfortschritt und -statistiken zu speichern.
+                Diese Seite verwendet Cookies um Einstellungen und den Spielfortschritt und -statistiken zu speichern.
             </p>
         </div>
     </div>
 </div>
-<div style="border:thin solid black; background-color: #ffdddd; color:black">
-    <p>Achtung, wichtige Information für diejenigen, die nicht zum ersten mal spielen: Mit Puzzle #5 habe ich den
-        Datensatz zur Berechnung der Ähnlichkeiten ausgetauscht. Ich hoffe die Werte ergeben so mehr Sinn und es wird
-        etwas einfacher. Ich werde das über die nächsten Tage beobachten. Für Fragen oder Feedback könnt ihr mich auch
-        auf <a href="https://old.reddit.com/user/JohannesGaetjen/">Reddit kontaktiern</a>.
-    </p>
-    <p>
-        Für euch wichtig zu wissen ist, dass jetzt <b>Groß- und Kleinschreibung berücksichtigt werden</b>. Die möglichen
-        Lösungswörter wurden auch neu zusammengestellt, zum einen um auch die Groß- und Kleinschreibung zu
-        berücksichtigen, zum anderen weil ich eine Liste gefunden habe, die meines Erachtens besser ist.
-    </p>
+<div class="dialog-underlay" id="settings-underlay">
+    <div class="dialog" id="settings" aria-labelledby="settings-heading" aria-modal="true" role="dialog">
+        <button class="dialog-close" id="settings-close" aria-label="Schließen">&times;</button>
+        <div class="dialog-content" id="settings-content">
+            <h3 id="settings-heading">Einstellungen</h3>
+            <div>
+                <input type="checkbox" name="dark-mode" value="dark-mode" id="dark-mode"/>
+                <label for="dark-mode">Dark mode</label>
+            </div>
+            <div>
+                <input type="checkbox" name="share-guesses" value="share-guesses" id="share-guesses"/>
+                <label for="share-guesses">Anzahl Versuche beim Teilen anzeigen</label>
+            </div>
+            <div>
+                <input type="checkbox" name="share-time" value="share-time" id="share-time"/>
+                <label for="share-time">Gebrauchte Zeit beim Teilen anzeigen</label>
+            </div>
+            <div>
+                <input type="checkbox" name="enable-umlauts" value="enable-umlauts" id="enable-umlauts"/>
+                <label for="enable-umlauts">Buttons für Umlaute und Eszett anzeigen</label>
+            </div>
+        </div>
+    </div>
 </div>
 <p id="similarity-story"></p>
 <div id="error" style="color:#ff0000"></div>
 <form id="form" autocorrect="off" autocapitalize="none"
       autocomplete="off">
-    <input type="button" value="Ä" id="add-ä-cap" onclick="addLetter('Ä')" class="button">
-    <input type="button" value="Ö" id="add-ö-cap" onclick="addLetter('Ö')" class="button">
-    <input type="button" value="Ü" id="add-ü-cap" onclick="addLetter('Ü')" class="button">
-    <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
-    <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
-    <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
-    <input type="button" value="ß" id="add-ß" onclick="addLetter('ß')" class="button">
+    <div id="umlaut-buttons">
+        <input type="button" value="Ä" id="add-ä-cap" onclick="addLetter('Ä')" class="button">
+        <input type="button" value="Ö" id="add-ö-cap" onclick="addLetter('Ö')" class="button">
+        <input type="button" value="Ü" id="add-ü-cap" onclick="addLetter('Ü')" class="button">
+        <input type="button" value="ä" id="add-ä" onclick="addLetter('ä')" class="button">
+        <input type="button" value="ö" id="add-ö" onclick="addLetter('ö')" class="button">
+        <input type="button" value="ü" id="add-ü" onclick="addLetter('ü')" class="button">
+        <input type="button" value="ß" id="add-ß" onclick="addLetter('ß')" class="button">
+    </div>
     <div id="form-row">
         <div id="guess-wrapper">
             <input placeholder="Raten" autocorrect="off" autocapitalize="none"
@@ -104,13 +122,14 @@
         <span id="yesterday2"></span>
     </p>
 
-    <!--
     <p><b>Ist die deutsche Version schwieriger als die englische?</b></p>
     <p>
-        Sicher lässt es sich nicht sagen, aber mein Eindruck ist ja. Ich persönlich brauche im Schnitt jedenfalls
-        mehr Versuche, als im Englischen.
+        Ohne genauere Information zur durchschnittliche Anzahl Versuche und Gewinnquoten im englischen Semantle lässt
+        sich das nicht mit Gewissheit sagen. Bis Puzzle #5 wurde in Semantlich ein anderer Datensatz zur Berechnung der
+        Ähnlichkeiten benutzt, wo öfters die Hinweise nicht so hilfreich waren. Da bin ich mir ziemlich sicher, dass es
+        schwerer war als im Englischen. Seit dem neuen Datensatz ist mein Eindruck, dass die Schwierigkeit in etwa
+        vergleichbar ist.
     </p>
-    -->
 
     <p><b>Wie wurden die möglichen Lösungswörter ausgewählt?</b></p>
     <p>Ich habe die Liste der häufigsten Wörter der deutschen Sprache von <a

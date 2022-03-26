@@ -24,10 +24,10 @@ const storage = window.localStorage;
 let chrono_forward = 1;
 let prefersDarkColorScheme = false;
 // settings
-let darkMode = storage.getItem("darkMode") === 'true' ? true: false;
-let shareNumber = true;
-let shareTime = true;
-let showUmlauts = true;
+let darkMode = storage.getItem("darkMode") === 'true';
+let shareGuesses = storage.getItem("shareGuesses") === 'false' ? false: true;
+let shareTime = storage.getItem("shareTime") === 'false' ? false: true;
+let enableUmlauts = storage.getItem("enableUmlauts") === 'false' ? false: true;
 
 function $(id) {
     if (id.charAt(0) !== '#') return false;
@@ -108,31 +108,27 @@ function solveStory(guesses, puzzleNumber) {
     guesses_chrono.sort(function(a, b){return a[3]-b[3]});
 
     let [similarity, old_guess, percentile, guess_number] = guesses_chrono[0];
-    let first_guess = `My first guess ${describe(similarity, percentile)}.`;
-    let first_guess_in_top = !!percentile;
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
-    let timeInfo = `Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}s vergangen.`
+    let timeInfo = ` Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}s vergangen.`
     if (time > 24 * 3600000) {
-        timeInfo = 'Ich habe über 24 Stunden gebraucht.'
+        timeInfo = ' Ich habe über 24 Stunden gebraucht.'
     }
-    let first_hit = '';
-    if (!first_guess_in_top) {
-        for (let entry of guesses_chrono) {
-            [similarity, old_guess, percentile, guess_number] = entry;
-            if (percentile) {
-                first_hit = ` Mein erstes Wort in den Top 1000 war #${guess_number}.  `;
-                break;
-            }
-        }
+    if (!shareTime) {
+        timeInfo = ''
     }
 
     const penultimate_guess = guesses_chrono[guesses_chrono.length - 2];
     [similarity, old_guess, percentile, guess_number] = penultimate_guess;
     const penultimate_guess_msg = `Mein vorletzter Versuch ${describe(similarity, percentile)}.`;
 
-    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber} in ${guess_count} ` +
-    `Versuchen gelöst. ${timeInfo} http://semantlich.johannesgaetjen.de`;
+    let guessCountInfo = '';
+    if (shareGuesses) {
+        guessCountInfo = ` in ${guess_count} Versuchen`;
+    }
+
+    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber}${guessCountInfo}` +
+    ` gelöst.${timeInfo} http://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -237,8 +233,32 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
         toggleDarkMode(darkMode);
 
+        $('#share-guesses').addEventListener('click', function(event) {
+            storage.setItem('shareGuesses', event.target.checked);
+            shareGuesses = event.target.checked;
+        });
+
+        $('#share-time').addEventListener('click', function(event) {
+            storage.setItem('shareTime', event.target.checked);
+            shareTime = event.target.checked;
+        });
+
+        $('#enable-umlauts').addEventListener('click', function(event) {
+            storage.setItem('enableUmlauts', event.target.checked);
+            enableUmlauts = event.target.checked;
+        });
+
         if (darkMode) {
             $('#dark-mode').checked = true;
+        }
+        if (shareGuesses) {
+            $('#share-guesses').checked = true;
+        }
+        if (shareTime) {
+            $('#share-time').checked = true;
+        }
+        if (enableUmlauts) {
+            $('#enable-umlauts').checked = true;
         }
 
         $('#give-up-btn').addEventListener('click', async function(event) {
@@ -383,7 +403,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     }
 
     function checkMedia() {
-        let darkMode = storage.getItem("darkMode") === 'true' ? true: false;
+        let darkMode = storage.getItem("darkMode") === 'true';
         toggleDarkMode(darkMode);
     }
 

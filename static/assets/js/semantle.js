@@ -215,7 +215,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
 
         document.querySelectorAll(".dialog-underlay, .dialog-close").forEach((el) => {
             el.addEventListener('click', () => {
-                document.body.classList.remove('dialog-content', 'rules-open', 'settings-open');
+                document.body.classList.remove('dialog-open', 'rules-open', 'settings-open');
             });
         });
 

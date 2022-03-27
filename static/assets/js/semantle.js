@@ -291,12 +291,14 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             $('#guess').value = "";
 
             const guessData = await submitGuess(guess);
+
+            if (guessData == null) {
+                $('#error').textContent = `Keine Antwort vom Server erhalten. Bitte versuche es später nochmal.`
+                return false;
+            }
             if (guessData.error == "unknown") {
                 $('#error').textContent = `Ich kenne das Wort ${guess} nicht.`;
                 return false;
-            }
-            if (!guessData) {
-                $('#error').textContent = `Keine Antwort vom Server erhalten. Bitte versuche es später nochmal.`
             }
 
             guess = guessData.guess

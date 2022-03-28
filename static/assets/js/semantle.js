@@ -116,9 +116,9 @@ function solveStory(guesses, puzzleNumber) {
 
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
-    let timeInfo = `Zeit zwischen erstem und letztem Versuch: ${timeFormatted}s\n`
+    let timeInfo = `Zeit: ${timeFormatted}s\n`
     if (time > 24 * 3600000) {
-        timeInfo = ' Ich habe über 24 Stunden gebraucht.\n'
+        timeInfo = 'Zeit: über 24h\n'
     }
     if (!shareTime) {
         timeInfo = ''
@@ -134,13 +134,18 @@ function solveStory(guesses, puzzleNumber) {
     }
     let guessCountInfo = '';
     if (shareGuesses) {
-        guessCountInfo = `Anzahl Versuche: ${guess_count}\n`;
+        guessCountInfo = `Versuche: ${guess_count}\n`;
     }
 
-    let [numTop10, numTop100, numTop1000] = [0, 0, 0]
+    let [numTop10, numTop100, numTop1000, numUnknown] = [0, 0, 0, 0]
     for (const element of topGuesses.slice(1)) {
         if (element[2] == '(kalt)') {
-            continue;
+            if(element[0] >= similarityStory.rest * 100.0) {
+                numUnknown += 1;
+                continue;
+            } else {
+                break;
+            }
         }
         if (element[2] <= 10) {
             numTop10 += 1
@@ -155,7 +160,7 @@ function solveStory(guesses, puzzleNumber) {
 
     let topInfo = '';
     if (shareTopInfo) {
-        topInfo = `Anzahl Wörter in den top 10/100/1000: ${numTop10}/${numTop100}/${numTop1000}\n`;
+        topInfo = `Anzahl top 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
     }
 
     return `Ich habe Semantlich #${puzzleNumber} (das Wortbedeutungsähnlichkeitsratespiel) ${winOrGiveUp}\n${guessCountInfo}` +

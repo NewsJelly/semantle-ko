@@ -140,7 +140,7 @@ function solveStory(guesses, puzzleNumber) {
     let [numTop10, numTop100, numTop1000] = [0, 0, 0]
     for (const element of topGuesses.slice(1)) {
         if (element[2] == '(kalt)') {
-            break;
+            continue;
         }
         if (element[2] <= 10) {
             numTop10 += 1

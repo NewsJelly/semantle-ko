@@ -337,7 +337,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
                 return false;
             }
             if (guessData.error == "unknown") {
-                $('#error').textContent = `Ich kenne das Wort ${guess} nicht.`;
+                $('#error').textContent = `Ich kenne das Wort ${guess} nicht. Ist Groß- und Kleinschreibung beachtet?`;
                 return false;
             }
 

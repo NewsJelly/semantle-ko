@@ -28,6 +28,7 @@ let darkMode = storage.getItem("darkMode") === 'true';
 let shareGuesses = storage.getItem("shareGuesses") === 'false' ? false: true;
 let shareTime = storage.getItem("shareTime") === 'false' ? false: true;
 let shareTopGuess = storage.getItem("shareTopGuess") === 'false' ? false: true;
+let shareTopInfo = storage.getItem("shareTopInfo") === 'false' ? false: true;
 let enableUmlauts = storage.getItem("enableUmlauts") === 'false' ? false: true;
 
 function $(id) {
@@ -124,23 +125,41 @@ function solveStory(guesses, puzzleNumber) {
     }
 
     let topGuessMsg = ''
+    const topGuesses = guesses.slice();
     if (shareTopGuess) {
-        const topGuesses = guesses.slice();
-        topGuesses.sort(function(a, b){return a[0]-b[0]});
-        const topGuess = topGuesses[topGuesses.length - 2];
+        topGuesses.sort(function(a, b){return b[0]-a[0]});
+        const topGuess = topGuesses[1];
         let [similarity, old_guess, percentile, guess_number] = topGuess;
         topGuessMsg = `Höchste Ähnlichkeit: ${describe(similarity, percentile)}\n`;
     }
-
     let guessCountInfo = '';
     if (shareGuesses) {
         guessCountInfo = `Anzahl Versuche: ${guess_count}\n`;
     }
 
-    // num guesses in top 1k
+    let [numTop10, numTop100, numTop1000] = [0, 0, 0]
+    for (const element of topGuesses.slice(1)) {
+        if (element[2] == '(kalt)') {
+            break;
+        }
+        if (element[2] <= 10) {
+            numTop10 += 1
+        }
+        if (element[2] <= 100) {
+            numTop100 += 1
+        }
+        if (element[2] <= 1000) {
+            numTop1000 += 1
+        }
+    }
+
+    let topInfo = '';
+    if (shareTopInfo) {
+        topInfo = `Anzahl Wörter in den top 10/100/1000: ${numTop10}/${numTop100}/${numTop1000}\n`;
+    }
 
     return `Ich habe Semantlich #${puzzleNumber} (das Wortbedeutungsähnlichkeitsratespiel) ${winOrGiveUp}\n${guessCountInfo}` +
-    `${timeInfo}${topGuessMsg}http://semantlich.johannesgaetjen.de`;
+    `${timeInfo}${topGuessMsg}${topInfo}http://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -260,27 +279,23 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             shareTopGuess = event.target.checked;
         });
 
+        $('#share-top-info').addEventListener('click', function(event) {
+            storage.setItem('shareTopInfo', event.target.checked);
+            shareTopInfo = event.target.checked;
+        });
+
         $('#enable-umlauts').addEventListener('click', function(event) {
             storage.setItem('enableUmlauts', event.target.checked);
             enableUmlauts = event.target.checked;
             toggleUmlautButtons(enableUmlauts);
         });
 
-        if (darkMode) {
-            $('#dark-mode').checked = true;
-        }
-        if (shareGuesses) {
-            $('#share-guesses').checked = true;
-        }
-        if (shareTime) {
-            $('#share-time').checked = true;
-        }
-        if (shareTopGuess) {
-            $('#share-top-guess').checked = true;
-        }
-        if (enableUmlauts) {
-            $('#enable-umlauts').checked = true;
-        }
+        $('#dark-mode').checked = darkMode;
+        $('#share-guesses').checked = shareGuesses;
+        $('#share-time').checked = shareTime;
+        $('#share-top-guess').checked = shareTopGuess;
+        $('#share-top-info').checked = shareTopInfo;
+        $('#enable-umlauts').checked = enableUmlauts;
         toggleUmlautButtons(enableUmlauts);
 
         $('#give-up-btn').addEventListener('click', async function(event) {

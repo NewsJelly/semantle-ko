@@ -12,6 +12,7 @@ def most_similar(mat: array, idx: int, k: int) -> Tuple[array, array]:
     dist_sort_args = dists[top_idxs].argsort()[::-1]
     return top_idxs[dist_sort_args], dists[top_idxs][dist_sort_args]
 
+
 # todo: deal with special case word not in valid_nearest (deadline: 1. may)
 def dump_nearest(puzzle_num: int, word: str, words: List[str], mat: array, k: int = 1000) \
         -> Dict[str, Tuple[str, float]]:

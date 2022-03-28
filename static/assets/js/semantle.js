@@ -79,21 +79,29 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
 
 }
 
-function updateLocalTime() {
-    const now = new Date();
-    now.setUTCHours(24, 0, 0, 0);
+function getUpdateTimeHours() {
+    const midnightUtc = new Date();
+    midnightUtc.setUTCHours(24, 0, 0, 0);
+    return midnightUtc.getHours();
+}
 
-    $('#localtime').innerHTML = `bzw. ${now.getHours()}:00 Uhr deiner Zeit`;
+function updateLocalTime() {
+
+    $('#localtime').innerHTML = `bzw. ${getUpdateTimeHours()}:00 Uhr deiner Zeit`;
 }
 
 function solveStory(guesses, puzzleNumber) {
-    const guess_count = guesses.length;
+    let guess_count = guesses.length - 1;
+    let winOrGiveUp = 'aufgegebn.';
+    if (storage.getItem("winState") == 1) {
+        winOrGiveUp = 'gelöst!';
+        guess_count += 1
+        if (guess_count == 1) {
+            return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! Bin ich ein Schummler, oder einfach nur gut? http://semantlich.johannesgaetjen.de`;
+        }
+    }
     if (guess_count == 0) {
         return `Ich habe Semantlich #${puzzleNumber} aufgegeben ohne auch nur einmal zu raten. http://semantlich.johannesgaetjen.de`;
-    }
-
-    if (guess_count == 1) {
-        return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! Bin ich ein Schummler, oder einfach nur gut? http://semantlich.johannesgaetjen.de`;
     }
 
     let describe = function(similarity, percentile) {
@@ -110,9 +118,9 @@ function solveStory(guesses, puzzleNumber) {
     let [similarity, old_guess, percentile, guess_number] = guesses_chrono[0];
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
-    let timeInfo = ` Zwischen meinem ersten und letzten Versuch sind ${timeFormatted}s vergangen.`
+    let timeInfo = `Zeit zwischen erstem und letztem Versuch: ${timeFormatted}s\n`
     if (time > 24 * 3600000) {
-        timeInfo = ' Ich habe über 24 Stunden gebraucht.'
+        timeInfo = ' Ich habe über 24 Stunden gebraucht.\n'
     }
     if (!shareTime) {
         timeInfo = ''
@@ -124,11 +132,14 @@ function solveStory(guesses, puzzleNumber) {
 
     let guessCountInfo = '';
     if (shareGuesses) {
-        guessCountInfo = ` in ${guess_count} Versuchen`;
+        guessCountInfo = `Anzahl Versuche: ${guess_count}\n`;
     }
 
-    return `Ich habe Semantlich (das Wortbedeutungsähnlichkeitsratespiel) #${puzzleNumber}${guessCountInfo}` +
-    ` gelöst.${timeInfo} http://semantlich.johannesgaetjen.de`;
+    // num guesses in top 1k
+    // highest guess
+
+    return `Ich habe Semantlich #${puzzleNumber} (das Wortbedeutungsähnlichkeitsratespiel) ${winOrGiveUp}\n${guessCountInfo}` +
+    `${timeInfo}http://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -491,11 +502,13 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b> Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="javascript:share();">Teile</a> dein Ergebnis und spiele morgen wieder. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
+            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b> `;
         } else {
-            response = `<p><b>Du hast aufgegeben!</b> Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen. <a href="/nearest1k/${puzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.</p>`;
+            response = `<p><b>Du hast nach ${guesses.length - 1} Versuchen aufgegeben!</b> `;
         }
-
+        const commonResponse = `Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen oder <a href="/nearest1k/${puzzleNumber}">hier</a> die 1000 ähnlichsten Wörter nachschauen.</p> <p>Um <b>${getUpdateTimeHours()}:00 Uhr</b> gibt es ein neues Wort.</p>`
+        response += commonResponse;
+        response += `<input type="button" value="Ergebnis kopieren" id="Teilen" onclick="share()" class="button"><br />`
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
         response += `<br/>
 Statistik: <br/>

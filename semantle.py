@@ -87,7 +87,8 @@ def get_guess(day: int, word: str):
 @app.route('/similarity/<int:day>')
 def get_similarity(day: int):
     nearest_dists = sorted([v[1] for v in app.nearests[day].values()])
-    return jsonify({"top": nearest_dists[-2], "top10": nearest_dists[-11], "rest": nearest_dists[0]})
+    return jsonify({"top": nearest_dists[-2], "top10": nearest_dists[-11], "top100": nearest_dists[-101],
+                    "rest": nearest_dists[0]})
 
 
 @app.route('/yesterday/<int:today>')

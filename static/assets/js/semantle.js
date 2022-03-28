@@ -27,6 +27,7 @@ let prefersDarkColorScheme = false;
 let darkMode = storage.getItem("darkMode") === 'true';
 let shareGuesses = storage.getItem("shareGuesses") === 'false' ? false: true;
 let shareTime = storage.getItem("shareTime") === 'false' ? false: true;
+let shareTopGuess = storage.getItem("shareTopGuess") === 'false' ? false: true;
 let enableUmlauts = storage.getItem("enableUmlauts") === 'false' ? false: true;
 
 function $(id) {
@@ -105,17 +106,13 @@ function solveStory(guesses, puzzleNumber) {
     }
 
     let describe = function(similarity, percentile) {
-        let out = `had a similarity of ${similarity.toFixed(2)}`;
-        if (percentile) {
-            out += ` (${percentile}/1000)`;
+        let out = `${similarity.toFixed(2)}`;
+        if (percentile != '(kalt)') {
+            out += ` (Rang ${percentile})`;
         }
         return out;
     }
 
-    const guesses_chrono = guesses.slice();
-    guesses_chrono.sort(function(a, b){return a[3]-b[3]});
-
-    let [similarity, old_guess, percentile, guess_number] = guesses_chrono[0];
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
     let timeInfo = `Zeit zwischen erstem und letztem Versuch: ${timeFormatted}s\n`
@@ -126,9 +123,14 @@ function solveStory(guesses, puzzleNumber) {
         timeInfo = ''
     }
 
-    const penultimate_guess = guesses_chrono[guesses_chrono.length - 2];
-    [similarity, old_guess, percentile, guess_number] = penultimate_guess;
-    const penultimate_guess_msg = `Mein vorletzter Versuch ${describe(similarity, percentile)}.`;
+    let topGuessMsg = ''
+    if (shareTopGuess) {
+        const topGuesses = guesses.slice();
+        topGuesses.sort(function(a, b){return a[0]-b[0]});
+        const topGuess = topGuesses[topGuesses.length - 2];
+        let [similarity, old_guess, percentile, guess_number] = topGuess;
+        topGuessMsg = `Höchste Ähnlichkeit: ${describe(similarity, percentile)}\n`;
+    }
 
     let guessCountInfo = '';
     if (shareGuesses) {
@@ -136,10 +138,9 @@ function solveStory(guesses, puzzleNumber) {
     }
 
     // num guesses in top 1k
-    // highest guess
 
     return `Ich habe Semantlich #${puzzleNumber} (das Wortbedeutungsähnlichkeitsratespiel) ${winOrGiveUp}\n${guessCountInfo}` +
-    `${timeInfo}http://semantlich.johannesgaetjen.de`;
+    `${timeInfo}${topGuessMsg}http://semantlich.johannesgaetjen.de`;
 }
 
 let Semantle = (function() {
@@ -254,6 +255,11 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             shareTime = event.target.checked;
         });
 
+        $('#share-top-guess').addEventListener('click', function(event) {
+            storage.setItem('shareTopGuess', event.target.checked);
+            shareTopGuess = event.target.checked;
+        });
+
         $('#enable-umlauts').addEventListener('click', function(event) {
             storage.setItem('enableUmlauts', event.target.checked);
             enableUmlauts = event.target.checked;
@@ -268,6 +274,9 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         }
         if (shareTime) {
             $('#share-time').checked = true;
+        }
+        if (shareTopGuess) {
+            $('#share-top-guess').checked = true;
         }
         if (enableUmlauts) {
             $('#enable-umlauts').checked = true;

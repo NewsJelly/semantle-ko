@@ -99,7 +99,7 @@ function solveStory(guesses, puzzleNumber) {
         winOrGiveUp = 'gelöst!';
         guess_count += 1
         if (guess_count == 1) {
-            return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! Bin ich ein Schummler, oder einfach nur gut? http://semantlich.johannesgaetjen.de`;
+            return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! Habe ich geschummelt, oder bin ich einfach nur gut? http://semantlich.johannesgaetjen.de`;
         }
     }
     if (guess_count == 0) {

@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2022, Johannes Gätjen, forked from Semantle by David Turner <novalis@novalis.org> semantle.novalis.org
+    Copyright (c) 2022, Newsjelly, forked from Semantlich by Johannes Gätjen semantlich.johannesgaetjen.de
 
-     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
 
     This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
@@ -17,7 +17,7 @@ let model = null;
 let numPuzzles = 4817;
 const now = Date.now();
 const today = Math.floor(Date.now() / 86400000);
-const initialDay = new Date('2022-03-18') / 86400000;
+const initialDay = new Date('2022-04-01') / 86400000;
 const puzzleNumber = (today - initialDay) % numPuzzles;
 const yesterdayPuzzleNumber = (puzzleNumber + numPuzzles - 1) % numPuzzles;
 const storage = window.localStorage;
@@ -29,7 +29,6 @@ let shareGuesses = storage.getItem("shareGuesses") === 'false' ? false: true;
 let shareTime = storage.getItem("shareTime") === 'false' ? false: true;
 let shareTopGuess = storage.getItem("shareTopGuess") === 'false' ? false: true;
 let shareTopInfo = storage.getItem("shareTopInfo") === 'false' ? false: true;
-let enableUmlauts = storage.getItem("enableUmlauts") === 'false' ? false: true;
 
 function $(id) {
     if (id.charAt(0) !== '#') return false;
@@ -43,10 +42,10 @@ function share() {
     const copied = ClipboardJS.copy(text);
 
     if (copied) {
-        alert("In Zwischenablage kopiert");
+        alert("클립보드로 복사했습니다.");
     }
     else {
-        alert("Kopieren fehlgeschlagen");
+        alert("클립보드에 복사할 수 없습니다.");
     }
 }
 
@@ -58,8 +57,8 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let percentileText = percentile;
     let progress = "";
     let closeClass = "";
-    if (similarity >= similarityStory.rest * 100 && percentile === '(kalt)') {
-        percentileText = '<span class="weirdWord">????<span class="tooltiptext">Dieses Wort ist nicht im Wörterbuch, ist aber im Datensatz vorhanden und hat eine höhere Ähnlichkeit, als das tausendst-ähnlichste Wort.</span></span>';
+    if (similarity >= similarityStory.rest * 100 && percentile === '1000위 이상') {
+        percentileText = '<span class="weirdWord">????<span class="tooltiptext">이 단어는 사전에는 없지만, 데이터셋에 포함되어 있으며 1000위 이하입니다.</span></span>';
     }
     if (typeof percentile === 'number') {
             closeClass = "close";
@@ -88,37 +87,36 @@ function getUpdateTimeHours() {
 }
 
 function updateLocalTime() {
-
-    $('#localtime').innerHTML = `bzw. ${getUpdateTimeHours()}:00 Uhr deiner Zeit`;
+    $('#localtime').innerHTML = `또는 현지 시간 ${getUpdateTimeHours()}:00`;
 }
 
 function solveStory(guesses, puzzleNumber) {
     let guess_count = guesses.length - 1;
-    let winOrGiveUp = 'aufgegebn.';
+    let winOrGiveUp = '포기하기';
     if (storage.getItem("winState") == 1) {
-        winOrGiveUp = 'gelöst!';
+        winOrGiveUp = '정답!';
         guess_count += 1
         if (guess_count == 1) {
-            return `Ich habe Semantlich #${puzzleNumber} beim ersten Versuch erraten! Habe ich geschummelt, oder bin ich einfach nur gut? http://semantlich.johannesgaetjen.de`;
+            return `첫번째 시도에서 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
         }
     }
     if (guess_count == 0) {
-        return `Ich habe Semantlich #${puzzleNumber} aufgegeben ohne auch nur einmal zu raten. http://semantlich.johannesgaetjen.de`;
+        return `#${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
     }
 
     let describe = function(similarity, percentile) {
         let out = `${similarity.toFixed(2)}`;
-        if (percentile != '(kalt)') {
-            out += ` (Rang ${percentile})`;
+        if (percentile != '1000위 이상') {
+            out += ` (순위 ${percentile})`;
         }
         return out;
     }
 
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
-    let timeInfo = `Zeit: ${timeFormatted}s\n`
+    let timeInfo = `시간: ${timeFormatted}s\n`
     if (time > 24 * 3600000) {
-        timeInfo = 'Zeit: über 24h\n'
+        timeInfo = '시간: 24h 초과\n'
     }
     if (!shareTime) {
         timeInfo = ''
@@ -130,16 +128,16 @@ function solveStory(guesses, puzzleNumber) {
         topGuesses.sort(function(a, b){return b[0]-a[0]});
         const topGuess = topGuesses[1];
         let [similarity, old_guess, percentile, guess_number] = topGuess;
-        topGuessMsg = `Höchste Ähnlichkeit: ${describe(similarity, percentile)}\n`;
+        topGuessMsg = `최대 유사도: ${describe(similarity, percentile)}\n`;
     }
     let guessCountInfo = '';
     if (shareGuesses) {
-        guessCountInfo = `Versuche: ${guess_count}\n`;
+        guessCountInfo = `추측 횟수: ${guess_count}\n`;
     }
 
     let [numTop10, numTop100, numTop1000, numUnknown] = [0, 0, 0, 0]
     for (const element of topGuesses.slice(1)) {
-        if (element[2] == '(kalt)') {
+        if (element[2] == '1000위 이상') {
             if(element[0] >= similarityStory.rest * 100.0) {
                 numUnknown += 1;
                 continue;
@@ -160,10 +158,10 @@ function solveStory(guesses, puzzleNumber) {
 
     let topInfo = '';
     if (shareTopInfo) {
-        topInfo = `Anzahl top 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
+        topInfo = `상위 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
     }
 
-    return `Ich habe Semantlich #${puzzleNumber} (das Wortbedeutungsähnlichkeitsratespiel) ${winOrGiveUp}\n${guessCountInfo}` +
+    return `시맨틀 #${puzzleNumber} 을(를) 풀었습니다! ${winOrGiveUp}\n${guessCountInfo}` +
     `${timeInfo}${topGuessMsg}${topInfo}http://semantlich.johannesgaetjen.de`;
 }
 
@@ -212,18 +210,18 @@ let Semantle = (function() {
 
     async function init() {
         let yesterday = await getYesterday()
-        $('#yesterday').innerHTML = `Das Lösungswort gestern war <b>"${yesterday}"</b>.`;
-        $('#yesterday2').innerHTML = `Das Lösungswort gestern war <b>"${yesterday}"</b>.
-        <a href="/nearest1k/${yesterdayPuzzleNumber}">Hier</a> kannst du die 1000 ähnlichsten Wörter nachschauen.`;
+        $('#yesterday').innerHTML = `어제의 정답은 <b>"${yesterday}"</b>입니다.`;
+        $('#yesterday2').innerHTML = `어제의 정답은 <b>"${yesterday}"</b>입니다.
+        <a href="/nearest1k/${yesterdayPuzzleNumber}">여기</a>에서 가장 비슷한 1000개의 단어를 확인할 수 있습니다.`;
         updateLocalTime();
 
         try {
             similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
-Heute ist Puzzle Nummer <b>${puzzleNumber}</b>. Das ähnlichste Wort hat eine Ähnlichkeit von
-<b>${(similarityStory.top * 100).toFixed(2)}</b>, das zehnt-ähnlichste Wort hat eine Ähnlichkeit von
-${(similarityStory.top10 * 100).toFixed(2)} und das tausend-ähnlichste Wort hat eine Ähnlichkeit von
-${(similarityStory.rest * 100).toFixed(2)}.
+오늘의 시맨틀 번호는 <b>${puzzleNumber}</b>입니다. 가장 유사한 단어의 유사도는
+<b>${(similarityStory.top * 100).toFixed(2)}</b>입니다., 10번째로 유사한 단어의 유사도는
+${(similarityStory.top10 * 100).toFixed(2)}이고,  1000번째로  유사한 단어의 유사도는
+${(similarityStory.rest * 100).toFixed(2)}입니다.
 `;
         } catch {
             // we can live without this in the event that something is broken
@@ -289,28 +287,20 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             shareTopInfo = event.target.checked;
         });
 
-        $('#enable-umlauts').addEventListener('click', function(event) {
-            storage.setItem('enableUmlauts', event.target.checked);
-            enableUmlauts = event.target.checked;
-            toggleUmlautButtons(enableUmlauts);
-        });
-
         $('#dark-mode').checked = darkMode;
         $('#share-guesses').checked = shareGuesses;
         $('#share-time').checked = shareTime;
         $('#share-top-guess').checked = shareTopGuess;
         $('#share-top-info').checked = shareTopInfo;
-        $('#enable-umlauts').checked = enableUmlauts;
-        toggleUmlautButtons(enableUmlauts);
 
         $('#give-up-btn').addEventListener('click', async function(event) {
             if (!gameOver) {
-                if (confirm("Bist du sicher, dass du aufgeben möchtest?")) {
+                if (confirm("정말로 포기하시겠습니까?")) {
                     const url = '/giveup/' + puzzleNumber;
                     const secret = await (await fetch(url)).text();
                     guessed.add(secret);
                     guessCount += 1;
-                    const newEntry = [100, secret, 'Das Lösungswort', guessCount];
+                    const newEntry = [100, secret, '정답', guessCount];
                     guesses.push(newEntry);
                     guesses.sort(function(a, b){return b[0]-a[0]});
                     updateGuesses(guess);
@@ -333,11 +323,11 @@ ${(similarityStory.rest * 100).toFixed(2)}.
             const guessData = await submitGuess(guess);
 
             if (guessData == null) {
-                $('#error').textContent = `Keine Antwort vom Server erhalten. Bitte versuche es später nochmal.`
+                $('#error').textContent = `서버가 응답하지 않습니다. 나중에 다시 시도해보세요.`
                 return false;
             }
             if (guessData.error == "unknown") {
-                $('#error').textContent = `Ich kenne das Wort ${guess} nicht. Ist Groß- und Kleinschreibung beachtet?`;
+                $('#error').textContent = `${guess}은(는) 알 수 없는 단어입니다.`;
                 return false;
             }
 
@@ -402,7 +392,7 @@ ${(similarityStory.rest * 100).toFixed(2)}.
     }
 
     function updateGuesses(guess) {
-        let inner = `<tr><th id="chronoOrder">#</th><th id="alphaOrder">Geratenes Wort</th><th id="similarityOrder">Ähnlichkeit</th><th>Ähnlichkeitsrang</th></tr>`;
+        let inner = `<tr><th id="chronoOrder">#</th><th id="alphaOrder">추측한 단어</th><th id="similarityOrder">유사도</th><th>유사도 순위</th></tr>`;
         /* This is dumb: first we find the most-recent word, and put
            it at the top.  Then we do the rest. */
         for (let entry of guesses) {
@@ -531,24 +521,24 @@ ${(similarityStory.rest * 100).toFixed(2)}.
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>Du hast es in ${guesses.length} Versuchen gefunden!</b> `;
+            response = `<p><b>${guesses.length}번째 시도에서 정답을 맞혔습니다!</b> `;
         } else {
-            response = `<p><b>Du hast nach ${guesses.length - 1} Versuchen aufgegeben!</b> `;
+            response = `<p><b>${guesses.length - 1}번째 시도에서 포기했습니다!</b> `;
         }
-        const commonResponse = `Du kannst noch weitere Worte eingeben um die Ähnlichkeit nachzuschauen oder <a href="/nearest1k/${puzzleNumber}">hier</a> die 1000 ähnlichsten Wörter nachschauen.</p> <p>Um <b>${getUpdateTimeHours()}:00 Uhr</b> gibt es ein neues Wort.</p>`
+        const commonResponse = `유사도를 확인하기 위해 다른 단어를 입력하거나, <a href="/nearest1k/${puzzleNumber}">여기</a>에서 가장 유사한 1000개의 단어를 볼 수 있습니다.</p> <p><b>${getUpdateTimeHours()}:00</b>에 새로운 문제를 풀 수 있습니다.</p>`
         response += commonResponse;
-        response += `<input type="button" value="Ergebnis kopieren" id="Teilen" onclick="share()" class="button"><br />`
+        response += `<input type="button" value="결과 복사하기" id="Teilen" onclick="share()" class="button"><br />`
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
         response += `<br/>
-Statistik: <br/>
+통계: <br/>
 <table>
-<tr><th>Erstes Spiel:</th><td>${stats['firstPlay']}</td></tr>
-<tr><th>Anzahl Spiele gespielt:</th><td>${totalGames}</td></tr>
-<tr><th>Gewonnen:</th><td>${stats['wins']}</td></tr>
-<tr><th>Spiele in Folge gewonnen:</th><td>${stats['winStreak']}</td></tr>
-<tr><th>Aufgegeben:</th><td>${stats['giveups']}</td></tr>
-<tr><th>Nicht beendet:</th><td>${stats['abandons']}</td></tr>
-<tr><th>Gesamtzahl Versuche über alle Spiele:</th><td>${stats['totalGuesses']}</td></tr>
+<tr><th>첫번째 게임 번호:</th><td>${stats['firstPlay']}</td></tr>
+<tr><th>게임 수:</th><td>${totalGames}</td></tr>
+<tr><th>정답:</th><td>${stats['wins']}</td></tr>
+<tr><th>연속 정답:</th><td>${stats['winStreak']}</td></tr>
+<tr><th>포기:</th><td>${stats['giveups']}</td></tr>
+<tr><th>도중 중단:</th><td>${stats['abandons']}</td></tr>
+<tr><th>총 추측 수:</th><td>${stats['totalGuesses']}</td></tr>
 </table>
 `;
         $('#response').innerHTML = response;

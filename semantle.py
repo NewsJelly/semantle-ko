@@ -15,8 +15,8 @@ from pytz import utc
 import word2vec
 from process_similar import get_nearest
 
-NUM_SECRETS = 4817
-FIRST_DAY = date(2022, 3, 18)
+NUM_SECRETS = 4076
+FIRST_DAY = date(2022, 4, 1)
 scheduler = BackgroundScheduler()
 scheduler.start()
 
@@ -68,6 +68,7 @@ def send_static(path):
 
 @app.route('/guess/<int:day>/<string:word>')
 def get_guess(day: int, word: str):
+    print(app.secrets[day])
     if app.secrets[day].lower() == word.lower():
         word = app.secrets[day]
     rtn = {"guess": word}
@@ -78,7 +79,7 @@ def get_guess(day: int, word: str):
     else:
         try:
             rtn["sim"] = word2vec.similarity(app.secrets[day], word)
-            rtn["rank"] = "(kalt)"
+            rtn["rank"] = "1000위 이상"
         except KeyError:
             return jsonify({"error": "unknown"}), 404
     return jsonify(rtn)
@@ -98,8 +99,7 @@ def get_solution_yesterday(today: int):
 @app.route('/nearest1k/<int:day>')
 def get_nearest_1k(day: int):
     if day not in app.secrets:
-        return "Die ähnlichsten Wörter für diesen Tag sind zur Zeit nicht verfügbar. Es sind immer nur höchstens " \
-               "der aktuelle, der morgige und die zwei letzten Tage verfügbar.", 404
+        return "이 날의 가장 유사한 단어는 현재 사용할 수 없습니다. 그저께부터 내일까지만 확인할 수 있습니다.", 404
     solution = app.secrets[day]
     words = [
         dict(
@@ -113,6 +113,6 @@ def get_nearest_1k(day: int):
 @app.route('/giveup/<int:day>')
 def give_up(day: int):
     if day not in app.secrets:
-        return 'Rick Astley would be disappointed', 404
+        return '저런...', 404
     else:
         return app.secrets[day]

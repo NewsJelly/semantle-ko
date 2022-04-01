@@ -7,7 +7,7 @@ function init() {
 
     const now = Date.now();
     const today = Math.floor(Date.now() / 86400000);
-    const initialDay = new Date('2022-03-18') / 86400000;
+    const initialDay = new Date('2022-04-01') / 86400000;
     const numPuzzles = 4817;
     const puzzleNumber = (today - initialDay) % numPuzzles;
 
@@ -16,9 +16,9 @@ function init() {
         $('#nearest').style="display:block;";
     } else {
         if (day == puzzleNumber) {
-            $('#spoiler').innerHTML = '<b>heutige</b>'
+            $('#spoiler').innerHTML = '<b>오늘</b>'
         } else {
-            $('#spoiler').innerHTML = '<b>morgige</b>'
+            $('#spoiler').innerHTML = '<b>내일</b>'
         }
         $('#warning').style="display:block";
         $('#warning').addEventListener('click', function(event) {

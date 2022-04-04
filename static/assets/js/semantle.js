@@ -307,7 +307,6 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
 
         $('#form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            $('#guess').focus();
             $('#error').textContent = "";
             let guess = $('#guess').value.trim().replace("!", "").replace("*", "").replaceAll("/", "");
             if (!guess) {
@@ -315,6 +314,9 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
             }
 
             $('#guess').value = "";
+
+            $('#dummy').focus(); // to fix ios buffer issue
+            $('#guess').focus();
 
             const guessData = await submitGuess(guess);
 

@@ -20,6 +20,7 @@ input {
 }
 
 body {
+  word-break: keep-all;
   margin: 0 auto;
   max-width: 800px;
   padding: 1em;
@@ -60,6 +61,7 @@ h2 {
 
 .overlay-button {
   position: relative;
+  color: black;
   background: none;
   border: none;
   height: 2em;
@@ -104,6 +106,7 @@ h2 {
   position: absolute;
   background: none;
   border: none;
+  padding: 0;
   color: black;
   font-size: 2em;
   height: 1em;
@@ -160,9 +163,16 @@ h2 {
 }
 
 #guess-wrapper #guess-btn {
+  color: black;
+  background-color: #eeeeee;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left: none;
+}
+
+#give-up-btn {
+  color: black;
+  background-color: #eeeeee;
 }
 
 th {
@@ -290,7 +300,18 @@ body.dark .weirdWord {
 }
 
 body.dark .overlay-button {
+  color: #fafafa;
   height: 2em;
   font-weight: bold;
   width: 2em;
+}
+
+body.dark #guess-wrapper #guess-btn {
+  color: #fafafa;
+  background-color: #333;
+}
+
+body.dark #give-up-btn {
+  color: #fafafa;
+  background-color: #333;
 }

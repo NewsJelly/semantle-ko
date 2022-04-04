@@ -67,15 +67,11 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
 <span class="progress-bar" style="width:${(1001 - percentile)/10}%">&nbsp;</span>
 </span>`;
     }
-    let color;
+    let style = '';
     if (oldGuess === guess) {
-        color = '#c0c';
-    } else if (darkMode) {
-        color = '#fafafa';
-    } else {
-        color = '#000';
+        style = 'style="color:#c0c"';
     }
-    return `<tr><td>${guessNumber}</td><td style="color:${color}" onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
+    return `<tr><td>${guessNumber}</td><td ${style} onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
 </td></tr>`;
 
 }

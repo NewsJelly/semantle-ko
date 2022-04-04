@@ -48,6 +48,13 @@ h2 {
   margin: 0;
 }
 
+input[type="button"] {
+  color: black;
+  padding: .5em;
+  border: 1px solid #666666;
+  border-radius: 0.2em;
+}
+
 #menu {
   display: flex;
   column-gap: .5em;
@@ -273,6 +280,11 @@ body.dark {
   background: #111;
   color: #fafafa;
   color-scheme: dark;
+}
+
+body.dark input[type="button"] {
+  color: #fafafa;
+  border: 1px solid #333;
 }
 
 body.dark a {

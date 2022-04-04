@@ -525,7 +525,7 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
         }
         const commonResponse = `유사도를 확인하기 위해 다른 단어를 입력하거나, <a href="/nearest1k/${puzzleNumber}">여기</a>에서 가장 유사한 1000개의 단어를 볼 수 있습니다.</p> <p><b>${getUpdateTimeHours()}:00</b>에 새로운 문제를 풀 수 있습니다.</p>`
         response += commonResponse;
-        response += `<input type="button" value="결과 복사하기" id="Teilen" onclick="share()" class="button"><br />`
+        response += `<input type="button" value="결과 복사하기" id="result" onclick="share()" class="button"><br />`
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
         response += `<br/>
 통계: <br/>

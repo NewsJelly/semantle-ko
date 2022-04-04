@@ -25,7 +25,7 @@
 <!-- include script here so that we can set dark mode of body on initialization -->
 <script src="assets/js/semantle.js"></script>
 <header>
-    <h2>시맨틀 — 단어 유사도 게임</h2>
+    <h2>시맨틀</h2>
     <nav id="menu">
         <button aria-label="Settings" class="overlay-button" id="settings-button">⚙</button>
         <button aria-label="Rules" class="overlay-button" id="rules-button">?</button>
@@ -35,19 +35,19 @@
     <div class="dialog" id="rules" aria-labelledby="rules-heading" aria-modal="true" role="dialog">
         <button class="dialog-close" id="rules-close" aria-label="Schließen">&times;</button>
         <div class="dialog-content" id="rules-content">
-            <h3 id="rules-heading">단어 추측하기</h3>
+            <h3 id="rules-heading">정답 단어를 맞춰보세요</h3>
             <p>
                 각각의 추측은 하나의 단어여야 합니다.
-                시맨틀에서는 추측한 단어와 정답 단어와의 유사도를 -100에서 +100까지로 보여줍니다.
+                시맨틀에서는 추측한 단어와 정답 단어가 의미적으로 얼마나 비슷한지에 대한 유사도를 -100에서 +100까지로 보여줍니다.
+                유사도는 철자의 유사도가 아니라 의미에 대한 유사도라는 점을 주의하세요.
                 정답과 가장 비슷한 1000개의 단어에 추측한 단어가 있을 경우에는 단어의 순위도 보여줍니다.
             </p>
             <p>
                 정답 단어는 명사 뿐만 아니라 동사, 형용사 등 모든 품사를 포함하며, 해당 품사의 기본형입니다.
-
+                (예시: 행복, 기쁘다, 사랑하다, 야옹)
             </p>
             <p>
-                국제표준시(UTC) 기준 0:00, <span id="localtime"></span>에 정답 단어가 바뀝니다. <span
-                    id="yesterday"></span>
+                국제표준시(UTC) 기준 0:00, <span id="localtime"></span>에 정답 단어가 바뀝니다. <span id="yesterday"></span>
             </p>
             <p>
                 이 페이지는 쿠키를 사용하여 설정 및 게임 통계를 저장합니다.
@@ -66,19 +66,19 @@
             </div>
             <div>
                 <input type="checkbox" name="share-guesses" value="share-guesses" id="share-guesses"/>
-                <label for="share-guesses">결과 텍스트에 시도 횟수 표시하기</label>
+                <label for="share-guesses">결과 공유 텍스트에 추측 횟수 표시하기</label>
             </div>
             <div>
                 <input type="checkbox" name="share-time" value="share-time" id="share-time"/>
-                <label for="share-time">결과 텍스트에 시간 표시하기</label>
+                <label for="share-time">결과 공유 텍스트에 걸린 시간 표시하기</label>
             </div>
             <div>
                 <input type="checkbox" name="share-top-guess" value="share-top-guess" id="share-top-guess"/>
-                <label for="share-top-guess">결과 텍스트에 최대 유사도 표시하기</label>
+                <label for="share-top-guess">결과 공유 텍스트에 최대 유사도 표시하기</label>
             </div>
             <div>
                 <input type="checkbox" name="share-top-info" value="share-top-info" id="share-top-info"/>
-                <label for="share-top-info">결과 텍스트에 상위 10/100/1000/???? 표시하기</label>
+                <label for="share-top-info">결과 공유 텍스트에 상위 10/100/1000/???? 표시하기</label>
             </div>
         </div>
     </div>
@@ -89,7 +89,7 @@
       autocomplete="off">
     <div id="form-row">
         <div id="guess-wrapper">
-            <input placeholder="추측하기" autocorrect="off" autocapitalize="none"
+            <input placeholder="추측할 단어를 입력하세요" autocorrect="off" autocapitalize="none"
                    autocomplete="off"
                    type="text" id="guess">
             <input type="submit" value="추측하기" id="guess-btn" class="button">
@@ -103,37 +103,76 @@
 <table id="guesses">
 </table>
 
-
 <input type="button" value="포기하기" id="give-up-btn" class="button">
 
 <footer>
     <h3 id="faq">질문 및 답변</h3>
 
-    <p><b>어제의 정답은 무엇인가요?</b></p>
+    <p><b>Q. 왜 유사도가 제가 예상한 값과 많이 다른가요?</b></p>
     <p>
-        <span id="yesterday2"></span>
+        A. 몇가지 이유가 있습니다.
     </p>
+    <ol>
+        <li>
+            단어가 하나 이상의 의미를 가지는 경우가 있을 수 있습니다.
+            이 경우, 하나의 의미가 다른 하나의 의미 보다 더 자주 사용되는 경우도 있습니다. (예시: 배)
+        </li>
+        <li>
+            다른 품사로 더 많이 사용되는 단어일 수 있습니다. (예시: 꾸다-꿈)
+        </li>
+        <li>
+            이 게임에서의 "유사도"를 더 정확하게 설명하면 "유사한 맥락에서 사용됨"을 의미합니다.
+            따라서 "사랑"과 "미움"은 반대되는 것처럼 보일 수 있지만 종종 비슷한 점수를 받습니다.
+            "사랑"의 실제 반대는 아마도 "화강암" 또는 "기화기"와 같은 것일 것입니다.
+        </li>
+        <li>
+            유사도 추정은 훈련된 데이터에 따라 편향되어 있을 수 있습니다.
+            시맨틀에서는 <a href="https://commoncrawl.org/">Common Crawl</a> 및
+            <a href="https://www.wikipedia.org/">Wikipedia</a> 데이터로 사전 훈련된
+            <a href="https://fasttext.cc/docs/en/crawl-vectors.html">FastText</a>를 사용합니다.
+        </li>
+    </ol>
 
-    <p><b>정답 단어 목록은 어떻게 결정되나요?</b></p>
-    <p><a href="https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Korean_5800">Wiktionary</a>
-        에서 자주 쓰이는 한국어 낱말을 가져와 두 글자 이상의 단어만을 사용했습니다.
-    </p>
-
-    <p><b>소스코드?</b></p>
+    <p><b>Q. 하루에 한 번 이상 플레이할 수는 없나요?</b></p>
     <p>
-        <a href="https://github.com/NewsJelly/semantle-ko">짜잔.</a>
+        A. 아니요. 하루에 한 번만 플레이할 수 있습니다.
+        저희는 <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>과 같은 종류의
+        단어 게임의 핵심 요소는 "하루에 한 번만, 모두가 동일한 정답"이라고 생각합니다.
     </p>
 
-    <p><b>다른 질문이나 피드백은 어떻게 보내나요?</b></p>
+    <p><b>Q. 어제의 정답은 무엇인가요?</b></p>
     <p>
-        <a href="https://github.com/NewsJelly/semantle-ko/issues">깃헙 이슈</a>로 문의해주세요.
+        A. <span id="yesterday2"></span>
     </p>
 
-    <p>David Turner의 <a href="https://semantle.novalis.org">Semantle</a>과 Johannes Gätjen의
+    <p><b>Q. 정답 단어는 어떻게 결정하나요?</b></p>
+    <p>
+        A. <a href="https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Korean_5800">Wiktionary</a>
+        에서 자주 쓰이는 한국어 낱말을 가져와 두 글자 이상의 단어만을 추출하여, 임의로 선택합니다.
+        정답 단어는 두 글자 이상이지만, 전략적인 이유로 한 글자인 단어를 추측해볼 수 있습니다.
+    </p>
+
+    <p><b>Q. 내 추측을 시간순으로 정렬할 수 있나요?</b></p>
+    <p>
+        A. 네. 추측 목록 상단의 "#" 머리글을 클릭하면 시간순으로 정렬할 수 있습니다.
+        한번 더 클릭하면 역순으로 정렬됩니다.
+        새로운 추측을 입력하거나 "유사도" 머리글을 클릭하면 다시 유사도순 정렬로 볼 수 있습니다.
+    </p>
+
+    <p><b>Q. 소스코드를 볼 수 있나요?</b></p>
+    <p>
+        A. <a href="https://github.com/NewsJelly/semantle-ko">짜잔.</a>
+    </p>
+
+    <p><b>Q. 다른 질문이나 피드백은 어떻게 보내나요?</b></p>
+    <p>
+        A. <a href="https://github.com/NewsJelly/semantle-ko/issues">깃헙 이슈</a>로 문의해주세요.
+    </p>
+
+    <p>
+        David Turner의 <a href="https://semantle.novalis.org">Semantle</a>과 Johannes Gätjen의
         <a href="http://semantlich.johannesgaetjen.de">Semantlich</a>를 참고했습니다.
-        워드 임베딩은 <a href="https://fasttext.cc/docs/en/crawl-vectors.html">FastText</a>를 사용합니다.
     </p>
-
 </footer>
 </body>
 </html>

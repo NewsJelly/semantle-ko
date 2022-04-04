@@ -58,7 +58,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let progress = "";
     let closeClass = "";
     if (similarity >= similarityStory.rest * 100 && percentile === '1000위 이상') {
-        percentileText = '<span class="weirdWord">????<span class="tooltiptext">이 단어는 사전에는 없지만, 데이터셋에 포함되어 있으며 1000위 이하입니다.</span></span>';
+        percentileText = '<span class="weirdWord">????<span class="tooltiptext">이 단어는 사전에는 없지만, 데이터셋에 포함되어 있으며 1000위 이내입니다.</span></span>';
     }
     if (typeof percentile === 'number') {
             closeClass = "close";
@@ -92,16 +92,16 @@ function updateLocalTime() {
 
 function solveStory(guesses, puzzleNumber) {
     let guess_count = guesses.length - 1;
-    let winOrGiveUp = '포기하기';
+    let winOrGiveUp = '포기했습니다...';
     if (storage.getItem("winState") == 1) {
-        winOrGiveUp = '정답!';
+        winOrGiveUp = '풀었습니다!';
         guess_count += 1
         if (guess_count == 1) {
-            return `첫번째 시도에서 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
+            return `첫번째 추측에서 시맨틀 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
         }
     }
     if (guess_count == 0) {
-        return `#${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
+        return `시맨틀 #${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
     }
 
     let describe = function(similarity, percentile) {
@@ -113,10 +113,10 @@ function solveStory(guesses, puzzleNumber) {
     }
 
     let time = storage.getItem('endTime') - storage.getItem('startTime');
-    let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "h").replace(":", "m");
-    let timeInfo = `시간: ${timeFormatted}s\n`
+    let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "시간").replace(":", "분");
+    let timeInfo = `걸린 시간: ${timeFormatted}초\n`
     if (time > 24 * 3600000) {
-        timeInfo = '시간: 24h 초과\n'
+        timeInfo = '걸린 시간: 24시간 이상\n'
     }
     if (!shareTime) {
         timeInfo = ''
@@ -161,8 +161,8 @@ function solveStory(guesses, puzzleNumber) {
         topInfo = `상위 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
     }
 
-    return `시맨틀 #${puzzleNumber} 을(를) 풀었습니다! ${winOrGiveUp}\n${guessCountInfo}` +
-    `${timeInfo}${topGuessMsg}${topInfo}http://semantlich.johannesgaetjen.de`;
+    return `시맨틀 #${puzzleNumber} 을(를) ${winOrGiveUp}\n${guessCountInfo}` +
+    `${timeInfo}${topGuessMsg}${topInfo}https://semantle-ko.newsjel.ly/`;
 }
 
 let Semantle = (function() {
@@ -219,8 +219,8 @@ let Semantle = (function() {
             similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
 오늘의 시맨틀 번호는 <b>${puzzleNumber}</b>입니다. 가장 유사한 단어의 유사도는
-<b>${(similarityStory.top * 100).toFixed(2)}</b>입니다., 10번째로 유사한 단어의 유사도는
-${(similarityStory.top10 * 100).toFixed(2)}이고,  1000번째로  유사한 단어의 유사도는
+<b>${(similarityStory.top * 100).toFixed(2)}</b>입니다. 10번째로 유사한 단어의 유사도는
+${(similarityStory.top10 * 100).toFixed(2)}이고, 1000번째로 유사한 단어의 유사도는
 ${(similarityStory.rest * 100).toFixed(2)}입니다.
 `;
         } catch {
@@ -521,9 +521,9 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>${guesses.length}번째 시도에서 정답을 맞혔습니다!</b> `;
+            response = `<p><b>${guesses.length}번째 추측에서 정답을 맞혔습니다!</b> `;
         } else {
-            response = `<p><b>${guesses.length - 1}번째 시도에서 포기했습니다!</b> `;
+            response = `<p><b>${guesses.length - 1}번째 추측에서 포기했습니다!</b> `;
         }
         const commonResponse = `유사도를 확인하기 위해 다른 단어를 입력하거나, <a href="/nearest1k/${puzzleNumber}">여기</a>에서 가장 유사한 1000개의 단어를 볼 수 있습니다.</p> <p><b>${getUpdateTimeHours()}:00</b>에 새로운 문제를 풀 수 있습니다.</p>`
         response += commonResponse;

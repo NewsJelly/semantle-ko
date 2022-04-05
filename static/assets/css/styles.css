@@ -92,6 +92,7 @@ input[type="button"] {
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 1;
 }
 
 .dialog {
@@ -161,6 +162,7 @@ input[type="button"] {
 
 #guesses {
   margin-bottom: 40px;
+  position: relative;
 }
 
 #guess-wrapper #guess {
@@ -233,7 +235,6 @@ button {
 }
 
 .weirdWord {
-  position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
 }
@@ -246,9 +247,11 @@ button {
   text-align: center;
   padding: 0.3ex 0;
   border-radius: 1ex;
-
   position: absolute;
+  right: 0;
   z-index: 1;
+  display: block;
+  max-width: 100%;
 }
 
 .weirdWord:hover .tooltiptext {
@@ -309,6 +312,10 @@ body.dark .gaveup {
 
 body.dark .weirdWord {
   border-color: #fafafa;
+}
+
+body.dark .weirdWord .tooltiptext {
+  background-color: #333;
 }
 
 body.dark .overlay-button {

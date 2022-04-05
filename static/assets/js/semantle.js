@@ -72,7 +72,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     if (oldGuess === guess) {
         style = 'style="color:#c0c"';
     }
-    return `<tr><td>${guessNumber}</td><td ${style} onclick="select('${oldGuess}', secretVec);">${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
+    return `<tr><td>${guessNumber}</td><td ${style}>${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
 </td></tr>`;
 
 }

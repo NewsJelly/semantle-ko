@@ -42,6 +42,7 @@ function share() {
     const copied = ClipboardJS.copy(text);
 
     if (copied) {
+        gtag('event', 'share');
         alert("클립보드로 복사했습니다.");
     }
     else {
@@ -178,6 +179,10 @@ let Semantle = (function() {
         }
         const url = "/guess/" + puzzleNumber + "/" + word;
         const response = await fetch(url);
+        gtag('event', 'guess', {
+            'event_category' : 'game_event',
+            'event_label' : word,
+        });
         try {
             return await response.json();
         } catch (e) {
@@ -301,6 +306,15 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
                     guesses.sort(function(a, b){return b[0]-a[0]});
                     updateGuesses(guess);
                     endGame(false, true);
+                    gtag('event', 'giveup', {
+                        'event_category' : 'game_event',
+                        'event_label' : 'giveup',
+                    });
+                    gtag('event', 'win', {
+                        'event_category' : 'game_event',
+                        'event_label' : 'guess_count',
+                        'value' : guessCount,
+                    });
                 }
             }
         });
@@ -339,6 +353,11 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
                     storage.setItem('startTime', Date.now())
                 }
                 guessCount += 1;
+                gtag('event', 'nth_guess', {
+                    'event_category' : 'game_event',
+                    'event_label' : guess,
+                    'value' : guessCount,
+                });
                 guessed.add(guess);
 
                 const newEntry = [similarity, guess, percentile, guessCount];
@@ -362,6 +381,15 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
 
             if (guessData.sim == 1 && !gameOver) {
                 endGame(true, true);
+                gtag('event', 'win', {
+                    'event_category' : 'game_event',
+                    'event_label' : 'win',
+                });
+                gtag('event', 'win', {
+                    'event_category' : 'game_event',
+                    'event_label' : 'guess_count',
+                    'value' : guessCount,
+                });
             }
             return false;
         });
@@ -437,14 +465,6 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
     function checkMedia() {
         let darkMode = storage.getItem("darkMode") === 'true';
         toggleDarkMode(darkMode);
-    }
-
-    function toggleUmlautButtons(on) {
-        if (on) {
-            $('#umlaut-buttons').style="";
-        } else {
-            $('#umlaut-buttons').style="display:none";
-        }
     }
 
     function saveGame(guessCount, winState) {

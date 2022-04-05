@@ -94,11 +94,11 @@ function solveStory(guesses, puzzleNumber) {
         winOrGiveUp = '풀었습니다!';
         guess_count += 1
         if (guess_count == 1) {
-            return `첫번째 추측에서 시맨틀 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
+            return `첫번째 추측에서 꼬맨틀 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
         }
     }
     if (guess_count == 0) {
-        return `시맨틀 #${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
+        return `꼬맨틀 #${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
     }
 
     let describe = function(similarity, percentile) {
@@ -158,7 +158,7 @@ function solveStory(guesses, puzzleNumber) {
         topInfo = `상위 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
     }
 
-    return `시맨틀 #${puzzleNumber} 을(를) ${winOrGiveUp}\n${guessCountInfo}` +
+    return `꼬맨틀 #${puzzleNumber} 을(를) ${winOrGiveUp}\n${guessCountInfo}` +
     `${timeInfo}${topGuessMsg}${topInfo}https://semantle-ko.newsjel.ly/`;
 }
 
@@ -219,7 +219,7 @@ let Semantle = (function() {
         try {
             similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
-오늘의 시맨틀 번호는 <b>${puzzleNumber}</b>입니다. 가장 유사한 단어의 유사도는
+오늘의 꼬맨틀 번호는 <b>${puzzleNumber}</b>입니다. 가장 유사한 단어의 유사도는
 <b>${(similarityStory.top * 100).toFixed(2)}</b>입니다. 10번째로 유사한 단어의 유사도는
 ${(similarityStory.top10 * 100).toFixed(2)}이고, 1000번째로 유사한 단어의 유사도는
 ${(similarityStory.rest * 100).toFixed(2)}입니다.

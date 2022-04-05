@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>시맨틀 — 단어 유사도 게임</title>
+    <title>꼬맨틀 — 단어 유사도 추측 게임</title>
     <script src="assets/js/clipboard.js"></script>
     <link rel="stylesheet" href="assets/css/modern-normalize.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -36,7 +36,7 @@
 <!-- include script here so that we can set dark mode of body on initialization -->
 <script src="assets/js/semantle.js"></script>
 <header>
-    <h2>시맨틀</h2>
+    <h2>꼬맨틀</h2>
     <nav id="menu">
         <button aria-label="Settings" class="overlay-button" id="settings-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -70,7 +70,7 @@
             <h3 id="rules-heading">정답 단어를 맞춰보세요</h3>
             <p>
                 각각의 추측은 하나의 단어여야 합니다.
-                시맨틀에서는 추측한 단어와 정답 단어가 의미적으로 얼마나 비슷한지에 대한 유사도를 -100에서 +100까지로 보여줍니다.
+                꼬맨틀에서는 추측한 단어와 정답 단어가 의미적으로 얼마나 비슷한지에 대한 유사도를 -100에서 +100까지로 보여줍니다.
                 유사도는 철자의 유사도가 아니라 의미에 대한 유사도라는 점을 주의하세요.
                 정답과 가장 비슷한 1000개의 단어에 추측한 단어가 있을 경우에는 단어의 순위도 보여줍니다.
             </p>
@@ -166,7 +166,7 @@
         </li>
         <li>
             유사도 추정은 훈련된 데이터에 따라 편향되어 있을 수 있습니다.
-            시맨틀에서는 <a href="https://commoncrawl.org/">Common Crawl</a> 및
+            꼬맨틀에서는 <a href="https://commoncrawl.org/">Common Crawl</a> 및
             <a href="https://www.wikipedia.org/">Wikipedia</a> 데이터로 사전 훈련된
             <a href="https://fasttext.cc/docs/en/crawl-vectors.html">FastText</a>를 사용합니다.
         </li>
@@ -174,7 +174,7 @@
 
     <p><b>Q. 하루에 한 번 이상 플레이할 수는 없나요?</b></p>
     <p>
-        A. 아니요. 하루에 한 번만 플레이할 수 있습니다.
+        A. 네. 하루에 한 번만 플레이할 수 있습니다.
         저희는 <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>과 같은 종류의
         단어 게임의 핵심 요소는 "하루에 한 번만, 모두가 동일한 정답"이라고 생각합니다.
     </p>
@@ -200,7 +200,7 @@
 
     <p><b>Q. 소스코드를 볼 수 있나요?</b></p>
     <p>
-        A. <a href="https://github.com/NewsJelly/semantle-ko">짜잔.</a>
+        A. <a href="https://github.com/NewsJelly/semantle-ko">짜잔</a>.
     </p>
 
     <p><b>Q. 다른 질문이나 피드백은 어떻게 보내나요?</b></p>
@@ -208,9 +208,11 @@
         A. <a href="https://github.com/NewsJelly/semantle-ko/issues">깃헙 이슈</a>로 문의해주세요.
     </p>
 
+    <hr>
+
     <p>
-        David Turner의 <a href="https://semantle.novalis.org">Semantle</a>과 Johannes Gätjen의
-        <a href="http://semantlich.johannesgaetjen.de">Semantlich</a>를 참고했습니다.
+        꼬맨틀은 David Turner의 <a href="https://semantle.novalis.org">Semantle</a>과 Johannes Gätjen의
+        <a href="http://semantlich.johannesgaetjen.de">Semantlich</a>를 바탕으로 <a href="https://newsjel.ly/">뉴스젤리</a>에서 만들었습니다.
     </p>
 </footer>
 </body>

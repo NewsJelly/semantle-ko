@@ -1,4 +1,4 @@
-# 시맨틀 — 단어 유사도 게임
+# 꼬맨틀 — 단어 유사도 추측 게임
 
 이 레포지터리는 Johannes Gätjen의 [Semantlich](http://semantlich.johannesgaetjen.de/)
 ([소스코드](https://github.com/gaetjen/semantle-de))를 포크하여,

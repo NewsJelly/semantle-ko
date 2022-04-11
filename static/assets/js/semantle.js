@@ -78,7 +78,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
 
 function getUpdateTimeHours() {
     const midnightUtc = new Date();
-    midnightUtc.setUTCHours(9, 0, 0, 0);
+    midnightUtc.setUTCHours(24 - 9, 0, 0, 0);
     return midnightUtc.getHours();
 }
 

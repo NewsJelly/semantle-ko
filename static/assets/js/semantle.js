@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2022, Newsjelly, forked from Semantlich by Johannes Gätjen semantlich.johannesgaetjen.de
+    Copyright (c) 2022, Newsjelly, forked from Semantlich by Johannes Gätjen semantlich.johannesgaetjen.de and Semantle by David Turner <novalis@novalis.org> semantle.novalis.org
 
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3.
 
@@ -14,11 +14,10 @@ let guesses = [];
 let guessed = new Set();
 let guessCount = 0;
 let model = null;
-let numPuzzles = 4817;
+let numPuzzles = 4076;
 const now = Date.now();
-const today = Math.floor(Date.now() / 86400000);
-const initialDay = new Date('2022-04-01') / 86400000;
-const puzzleNumber = (today - initialDay) % numPuzzles;
+const initialDate = new Date('2022-04-01T00:00:00+09:00');
+const puzzleNumber = Math.floor((new Date() - initialDate) / 86400000) % numPuzzles;
 const yesterdayPuzzleNumber = (puzzleNumber + numPuzzles - 1) % numPuzzles;
 const storage = window.localStorage;
 let chrono_forward = 1;
@@ -79,7 +78,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
 
 function getUpdateTimeHours() {
     const midnightUtc = new Date();
-    midnightUtc.setUTCHours(24, 0, 0, 0);
+    midnightUtc.setUTCHours(9, 0, 0, 0);
     return midnightUtc.getHours();
 }
 

@@ -4,12 +4,9 @@ function $(id) {
 }
 
 function init() {
-
-    const now = Date.now();
-    const today = Math.floor(Date.now() / 86400000);
-    const initialDay = new Date('2022-04-01') / 86400000;
-    const numPuzzles = 4817;
-    const puzzleNumber = (today - initialDay) % numPuzzles;
+    const initialDate = new Date('2022-04-01T00:00:00+09:00');
+    const numPuzzles = 4076;
+    const puzzleNumber = Math.floor((new Date() - initialDate) / 86400000) % numPuzzles;
 
     const day = parseInt($('#day').innerHTML.substring(1))
     if (day != puzzleNumber && day != (puzzleNumber + 1) % numPuzzles) {

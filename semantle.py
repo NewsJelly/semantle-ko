@@ -10,10 +10,12 @@ from flask import (
     jsonify,
     render_template
 )
-from pytz import utc
+from pytz import utc, timezone
 
 import word2vec
 from process_similar import get_nearest
+
+KST = timezone('Asia/Seoul')
 
 NUM_SECRETS = 4076
 FIRST_DAY = date(2022, 4, 1)
@@ -29,7 +31,7 @@ with open('data/secrets.txt', 'r', encoding='utf-8') as f:
 print("initializing nearest words for solutions")
 app.secrets = dict()
 app.nearests = dict()
-current_puzzle = (datetime.utcnow().date() - FIRST_DAY).days % NUM_SECRETS
+current_puzzle = (utc.localize(datetime.utcnow()).astimezone(KST).date() - FIRST_DAY).days % NUM_SECRETS
 for offset in range(-2, 2):
     puzzle_number = (current_puzzle + offset) % NUM_SECRETS
     secret_word = secrets[puzzle_number]
@@ -37,10 +39,10 @@ for offset in range(-2, 2):
     app.nearests[puzzle_number] = get_nearest(puzzle_number, secret_word, valid_nearest_words, valid_nearest_vecs)
 
 
-@scheduler.scheduled_job(trigger=CronTrigger(hour=1, minute=0, timezone=utc))
+@scheduler.scheduled_job(trigger=CronTrigger(hour=1, minute=0, timezone=KST))
 def update_nearest():
     print("scheduled stuff triggered!")
-    next_puzzle = ((datetime.utcnow().date() - FIRST_DAY).days + 1) % NUM_SECRETS
+    next_puzzle = ((utc.localize(datetime.utcnow()).astimezone(KST).date() - FIRST_DAY).days + 1) % NUM_SECRETS
     next_word = secrets[next_puzzle]
     to_delete = (next_puzzle - 4) % NUM_SECRETS
     if to_delete in app.secrets:

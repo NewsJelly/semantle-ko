@@ -17,7 +17,7 @@ from process_similar import get_nearest
 
 KST = timezone('Asia/Seoul')
 
-NUM_SECRETS = 4076
+NUM_SECRETS = 4650
 FIRST_DAY = date(2022, 4, 1)
 scheduler = BackgroundScheduler()
 scheduler.start()

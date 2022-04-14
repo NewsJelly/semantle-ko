@@ -5,32 +5,28 @@
 한국어로 플레이할 수 있도록 수정한 것입니다.
 
 ### Setup
-create virtualenv:
-```bash
-python3.10 -m venv semantle-ko
-source semantle-ko/bin/activate
-```
-
-install requirements
-```bash
-pip install -r requirements.txt
-```
 
 Download Word2Vec and dictionary data:
 ```bash
 cd data
 wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ko.300.vec.gz
 gzip -d cc.ko.300.vec.gz
-wget https://github.com/acidsound/korean_wordlist/raw/master/wordslistUnique.txt
+wget https://github.com/spellcheck-ko/hunspell-dict-ko/releases/download/0.7.92/ko-aff-dic-0.7.92.zip
+unzip ko-aff-dic-0.7.92.zip
 ```
 
-save word2vec in db
+Filter and save word2vec in DB
 ```bash
-cd ..
-python process_vecs.py
+docker-compose run --rm --entrypoint python app filter_words.py
+docker-compose run --rm --entrypoint python app process_vecs.py
 ```
 
-(optional) Regenerate secrets
+(Optional) Regenerate secrets
 ```bash
-python generate_secrets.py
+docker-compose run --rm --entrypoint python app generate_secrets.py
+```
+
+Start server
+```bash
+docker-compose up
 ```

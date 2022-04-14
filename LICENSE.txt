@@ -707,13 +707,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 -----------------------
-German spelling dictionary from WinEdt.org published under GNU GPL: https://www.winedt.org/dict.html
+For Korean dictionary (https://github.com/spellcheck-ko/hunspell-dict-ko)
+The combined dict-ko-data.yaml in the source code and the built files (ko.aff and ko.dic) are licensed under the GPL version 3. See LICENSE.GPL-3.0 for terms.
+Works under CC BY 4.0 and CC BY-SA 2.0 KR can be adapted under CC BY-SA 4.0. And CC BY-SA 4.0 declares the GPL version 3 as an one-way compatible license.
+Therefore, The combined dictionary is licensed under the GPL version 3.
+See https://creativecommons.org/share-your-work/licensing-considerations/compatible-licenses
 -----------------------
 Word embeddings from FastText, published under Creative Commons Attribution-Share-Alike License 3.0
 https://creativecommons.org/licenses/by-sa/3.0/
 https://fasttext.cc/docs/en/crawl-vectors.html
 -----------------------
-for frequent_words.txt
+For frequent_words.txt
 From Wiktionary, published under Creative Commons Attribution-Share-Alike License 3.0
 https://creativecommons.org/licenses/by-sa/3.0/
-https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/A_Frequency_Dictionary_of_German
+https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Korean_5800

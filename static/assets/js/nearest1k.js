@@ -5,7 +5,7 @@ function $(id) {
 
 function init() {
     const initialDate = new Date('2022-04-01T00:00:00+09:00');
-    const numPuzzles = 4076;
+    const numPuzzles = 4650;
     const puzzleNumber = Math.floor((new Date() - initialDate) / 86400000) % numPuzzles;
 
     const day = parseInt($('#day').innerHTML.substring(1))

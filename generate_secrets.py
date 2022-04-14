@@ -5,12 +5,30 @@ from process_vecs import is_hangul
 
 rnd = Random(67543233)
 
-early_solutions = []
+early_solutions = [
+    '찌르다',
+    '비빔밥',
+    '생일',
+    '미팅',
+    '도서관',
+    '경비',
+    '주식',
+    '쏘다',
+    '넷째',
+    '좌석',
+    '스치다',
+    '온통',
+    '왼손',
+    '흑인',
+    '혹은',
+    '진행',
+    '운동장',
+]
 
 if __name__ == '__main__':
     with open('data/valid_nearest.dat', 'rb') as f:
         valid_nearest_words, _ = pickle.load(f)
-    with open('data/frequent_words.txt', 'r', encoding='UTF-8') as f:
+    with open('data/filtered_frequent_words.txt', 'r', encoding='UTF-8') as f:
         file_content = f.readlines()
     words = set()
     removed = set()

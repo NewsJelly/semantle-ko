@@ -39,7 +39,7 @@ if __name__ == '__main__':
     cursor = connection.cursor()
     cursor.execute("""CREATE TABLE IF NOT EXISTS guesses (word text PRIMARY KEY, vec blob)""")
     print("created table")
-    normal_words = load_dic('data/wordslistUnique.txt')
+    normal_words = load_dic('data/ko-aff-dic-0.7.92/ko_filtered.txt')
     print("# words in dictionary:", len(normal_words))
     valid_nearest = []
     valid_nearest_mat = None

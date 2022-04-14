@@ -3,3 +3,7 @@ flask~=2.0.3
 apscheduler~=3.9.1
 gunicorn~=20.1.0
 tqdm~=4.63.1
+transformers~=4.18.0
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch

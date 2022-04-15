@@ -55,7 +55,7 @@ def update_nearest():
 
 @app.route('/')
 def get_index():
-    return send_file('static/index.html')
+    return render_template('index.html')
 
 
 @app.route("/favicon.ico")

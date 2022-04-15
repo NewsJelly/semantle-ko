@@ -3,10 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="꼬맨틀 — 단어 유사도 추측 게임">
+    <meta property="og:url" content="{{ request.base_url }}">
+    <meta property="og:image" content="{{ request.host_url }}assets/icon-512.png">
+    <meta property="og:description" content="하루에 한 번, 오늘의 단어를 맞춰보세요. 단어를 입력하면 정답 단어와의 유사도를 보여줍니다.">
+
     <title>꼬맨틀 — 단어 유사도 추측 게임</title>
-    <script src="/assets/js/clipboard.js"></script>
     <link rel="stylesheet" href="/assets/css/modern-normalize.min.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="/assets/js/clipboard.js"></script>
 
     <link rel="icon" href="/assets/favicon.ico" sizes="any">
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
@@ -68,10 +75,10 @@
             </svg>
         </button>
         <div class="dialog-content" id="rules-content">
-            <h3 id="rules-heading">정답 단어를 맞춰보세요</h3>
+            <h3 id="rules-heading">하루에 한 번, 오늘의 단어를 맞춰보세요.</h3>
             <p>
-                각각의 추측은 하나의 단어여야 합니다.
-                꼬맨틀에서는 추측한 단어와 정답 단어가 의미적으로 얼마나 비슷한지에 대한 유사도를 -100에서 +100까지로 보여줍니다.
+                단어를 입력하면 정답 단어와의 유사도를 보여줍니다.
+                꼬맨틀에서는 추측한 단어와 정답 단어가 의미적으로 얼마나 비슷한지에 대한 유사도를 -100에서 +100까지로 표현합니다.
                 유사도는 철자의 유사도가 아니라 의미에 대한 유사도라는 점을 주의하세요.
                 정답과 가장 비슷한 1000개의 단어에 추측한 단어가 있을 경우에는 단어의 순위도 보여줍니다.
             </p>

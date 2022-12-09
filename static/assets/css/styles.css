@@ -1,12 +1,21 @@
-@font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
 
 * {
   box-sizing: border-box;
+}
+
+b, strong, th {
+  font-weight: 600;
+}
+
+a {
+  color: #11a4d3;
+}
+
+hr {
+  background-color: #a6a6a6;
+  height: 1px;
+  border: 0;
 }
 
 body,
@@ -14,24 +23,50 @@ input {
   font-size: 17px;
   line-height: 1.59;
   -webkit-font-smoothing: subpixel-antialiased;
-  font-family: 'Pretendard-Regular', -apple-system-font, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-family: 'Pretendard', -apple-system-font, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   text-rendering: optimizeLegibility;
   font-weight: 400;
 }
 
 body {
   word-break: keep-all;
+  margin: 0;
+  padding: 0;
+}
+
+body .banner {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.5em;
+  margin-bottom: 1.6em;
+  border-bottom: 1px solid #a6a6a6;
+  text-decoration: none;
+  color: #000;
+}
+
+body .banner img {
+  height: 1.7em;
+}
+
+body .banner span {
+  margin-top: 4px;
+  font-size: 0.9em;
+}
+
+body .banner span b {
+  font-weight: 700;
+}
+
+body .container {
   margin: 0 auto;
-  max-width: 800px;
-  padding: 1em;
+  max-width: 640px;
+  padding: 0 1em 1em;
 }
 
 body.dialog-open {
   overflow: hidden;
-}
-
-body.rules-open #rules-underlay {
-  display: block;
 }
 
 body.settings-open #settings-underlay {
@@ -163,6 +198,7 @@ input[type="button"] {
 #guesses {
   margin-bottom: 40px;
   position: relative;
+  width: 100%;
 }
 
 #guess-wrapper #guess {
@@ -231,7 +267,7 @@ button {
 }
 
 .progress-bar {
-  background-color: #008000;
+  background-color: #00b5ef;
 }
 
 .weirdWord {
@@ -254,12 +290,21 @@ button {
   max-width: 100%;
 }
 
+.subtext {
+  color: #666666;
+}
+
+ul {
+  margin-top: -2.59em;
+  padding-inline-start: 3em;
+}
+
 .weirdWord:hover .tooltiptext {
   visibility: visible;
 }
 
 footer {
-  margin-top: 200px;
+  margin-top: 5em;
 }
 
 @media only screen and (max-width: 640px) {
@@ -276,6 +321,10 @@ footer {
   th {
     padding-right: .5em;
   }
+
+  .progress-container {
+    width: 8em;
+  }
 }
 
 /* Dark mode */
@@ -285,13 +334,13 @@ body.dark {
   color-scheme: dark;
 }
 
+body.dark .banner {
+  color: #ffffff;
+}
+
 body.dark input[type="button"] {
   color: #fafafa;
   border: 1px solid #333;
-}
-
-body.dark a {
-  color: #9af;
 }
 
 body.dark .dialog {
@@ -333,4 +382,8 @@ body.dark #guess-wrapper #guess-btn {
 body.dark #give-up-btn {
   color: #fafafa;
   background-color: #333;
+}
+
+body.dark .subtext {
+  color: #aaaaaa;
 }

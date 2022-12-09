@@ -27,7 +27,6 @@ let darkMode = storage.getItem("darkMode") === 'true';
 let shareGuesses = storage.getItem("shareGuesses") === 'false' ? false: true;
 let shareTime = storage.getItem("shareTime") === 'false' ? false: true;
 let shareTopGuess = storage.getItem("shareTopGuess") === 'false' ? false: true;
-let shareTopInfo = storage.getItem("shareTopInfo") === 'false' ? false: true;
 
 function $(id) {
     if (id.charAt(0) !== '#') return false;
@@ -69,7 +68,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     }
     let style = '';
     if (oldGuess === guess) {
-        style = 'style="color:#c0c"';
+        style = 'style="color: #f7617a;font-weight: 600;"';
     }
     return `<tr><td>${guessNumber}</td><td ${style}>${oldGuess}</td><td>${similarity.toFixed(2)}</td><td class="${closeClass}">${percentileText}${progress}
 </td></tr>`;
@@ -82,22 +81,17 @@ function getUpdateTimeHours() {
     return midnightUtc.getHours();
 }
 
-function updateLocalTime() {
-    $('#localtime').innerHTML = `또는 현지 시간 ${getUpdateTimeHours()}:00`;
-}
-
 function solveStory(guesses, puzzleNumber) {
     let guess_count = guesses.length - 1;
-    let winOrGiveUp = '포기했습니다...';
-    if (storage.getItem("winState") == 1) {
-        winOrGiveUp = '풀었습니다!';
+    let is_win = storage.getItem("winState") == 1;
+    if (is_win) {
         guess_count += 1
         if (guess_count == 1) {
-            return `첫번째 추측에서 꼬맨틀 #${puzzleNumber} 을(를) 맞췄습니다! 컨닝하신게 아니라면 정말 대단하네요. https://semantle-ko.newsjel.ly/`;
+            return `이럴 수가! 첫번째 추측에서 ${puzzleNumber}번째 꼬맨틀 정답 단어를 맞췄습니다!\nhttps://semantle-ko.newsjel.ly/`;
         }
     }
     if (guess_count == 0) {
-        return `꼬맨틀 #${puzzleNumber} 을(를) 시도하지도 않고 바로 포기했습니다. https://semantle-ko.newsjel.ly/`;
+        return `${puzzleNumber}번째 꼬맨틀을 시도하지 않고 바로 포기했어요.\nhttps://semantle-ko.newsjel.ly/`;
     }
 
     let describe = function(similarity, percentile) {
@@ -110,9 +104,9 @@ function solveStory(guesses, puzzleNumber) {
 
     let time = storage.getItem('endTime') - storage.getItem('startTime');
     let timeFormatted = new Date(time).toISOString().substr(11, 8).replace(":", "시간").replace(":", "분");
-    let timeInfo = `걸린 시간: ${timeFormatted}초\n`
+    let timeInfo = `소요 시간: ${timeFormatted}초\n`
     if (time > 24 * 3600000) {
-        timeInfo = '걸린 시간: 24시간 이상\n'
+        timeInfo = '소요 시간: 24시간 이상\n'
     }
     if (!shareTime) {
         timeInfo = ''
@@ -131,34 +125,13 @@ function solveStory(guesses, puzzleNumber) {
         guessCountInfo = `추측 횟수: ${guess_count}\n`;
     }
 
-    let [numTop10, numTop100, numTop1000, numUnknown] = [0, 0, 0, 0]
-    for (const element of topGuesses.slice(1)) {
-        if (element[2] == '1000위 이상') {
-            if(element[0] >= similarityStory.rest * 100.0) {
-                numUnknown += 1;
-                continue;
-            } else {
-                break;
-            }
-        }
-        if (element[2] <= 10) {
-            numTop10 += 1
-        }
-        if (element[2] <= 100) {
-            numTop100 += 1
-        }
-        if (element[2] <= 1000) {
-            numTop1000 += 1
-        }
+    if (is_win) {
+        return `${puzzleNumber}번째 꼬맨틀을 풀었습니다!\n${guessCountInfo}` +
+            `${timeInfo}${topGuessMsg}https://semantle-ko.newsjel.ly/`;
     }
 
-    let topInfo = '';
-    if (shareTopInfo) {
-        topInfo = `상위 10/100/1000/????: ${numTop10}/${numTop100}/${numTop1000}/${numUnknown}\n`;
-    }
-
-    return `꼬맨틀 #${puzzleNumber} 을(를) ${winOrGiveUp}\n${guessCountInfo}` +
-    `${timeInfo}${topGuessMsg}${topInfo}https://semantle-ko.newsjel.ly/`;
+    return `저런… ${puzzleNumber}번째 꼬맨틀을 포기했어요..ㅠ\n${guessCountInfo}` +
+            `${timeInfo}${topGuessMsg}https://semantle-ko.newsjel.ly/`;
 }
 
 let Semantle = (function() {
@@ -210,19 +183,16 @@ let Semantle = (function() {
 
     async function init() {
         let yesterday = await getYesterday()
-        $('#yesterday').innerHTML = `어제의 정답은 <b>"${yesterday}"</b>입니다.`;
-        $('#yesterday2').innerHTML = `어제의 정답은 <b>"${yesterday}"</b>입니다.
-        <a href="/nearest1k/${yesterdayPuzzleNumber}">여기</a>에서 가장 비슷한 1000개의 단어를 확인할 수 있습니다.`;
-        updateLocalTime();
+        $('#yesterday2').innerHTML = `어제의 정답 단어는 <b>"${yesterday}"</b>입니다.`;
+        $('#yesterday-nearest1k').innerHTML = `정답 단어와 비슷한, <a href="/nearest1k/${yesterdayPuzzleNumber}">유사도 기준 상위 1000개의 단어</a>를 확인할 수 있습니다.`;
 
         try {
             similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
-오늘의 꼬맨틀 번호는 <b>${puzzleNumber}</b>입니다. 가장 유사한 단어의 유사도는
-<b>${(similarityStory.top * 100).toFixed(2)}</b>입니다. 10번째로 유사한 단어의 유사도는
-${(similarityStory.top10 * 100).toFixed(2)}이고, 1000번째로 유사한 단어의 유사도는
-${(similarityStory.rest * 100).toFixed(2)}입니다.
-`;
+            ${puzzleNumber}번째 꼬맨틀의 정답 단어를 맞춰보세요.<br/>
+            정답 단어와 가장 유사한 단어의 유사도는 <b>${(similarityStory.top * 100).toFixed(2)}</b> 입니다.
+            10번째로 유사한 단어의 유사도는 ${(similarityStory.top10 * 100).toFixed(2)}이고,
+            1000번째로 유사한 단어의 유사도는 ${(similarityStory.rest * 100).toFixed(2)} 입니다.`;
         } catch {
             // we can live without this in the event that something is broken
         }
@@ -240,22 +210,17 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
             prefersDarkColorScheme = true;
         }
 
-        if (!storage.getItem("readRules")) {
-            openRules();
-        }
-
-        $("#rules-button").addEventListener('click', openRules);
         $("#settings-button").addEventListener('click', openSettings);
 
         document.querySelectorAll(".dialog-underlay, .dialog-close").forEach((el) => {
             el.addEventListener('click', () => {
-                document.body.classList.remove('dialog-open', 'rules-open', 'settings-open');
+                document.body.classList.remove('dialog-open', 'settings-open');
             });
         });
 
         document.querySelectorAll(".dialog").forEach((el) => {
             el.addEventListener("click", (event) => {
-                // prevents click from propagating to the underlay, which closes the rules
+                // prevents click from propagating to the underlay, which closes the dialog
                 event.stopPropagation();
             });
         });
@@ -282,16 +247,10 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
             shareTopGuess = event.target.checked;
         });
 
-        $('#share-top-info').addEventListener('click', function(event) {
-            storage.setItem('shareTopInfo', event.target.checked);
-            shareTopInfo = event.target.checked;
-        });
-
         $('#dark-mode').checked = darkMode;
         $('#share-guesses').checked = shareGuesses;
         $('#share-time').checked = shareTime;
         $('#share-top-guess').checked = shareTopGuess;
-        $('#share-top-info').checked = shareTopInfo;
 
         $('#give-up-btn').addEventListener('click', async function(event) {
             if (!gameOver) {
@@ -405,11 +364,6 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
                 endGame(winState > 0, false);
             }
         }
-    }
-
-    function openRules() {
-        document.body.classList.add('dialog-open', 'rules-open');
-        storage.setItem("readRules", true);
     }
 
     function openSettings() {
@@ -538,24 +492,25 @@ ${(similarityStory.rest * 100).toFixed(2)}입니다.
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>${guesses.length}번째 추측에서 정답을 맞혔습니다!</b> `;
+            response = `<p><b>정답 단어를 맞추었습니다. ${guesses.length}번째 추측만에 정답을 맞췄네요!</b><br/>`;
         } else {
-            response = `<p><b>${guesses.length - 1}번째 추측에서 포기했습니다!</b> `;
+            response = `<p><b>${guesses.length - 1}번째 추측에서 포기했습니다!</b><br/>`;
         }
-        const commonResponse = `유사도를 확인하기 위해 다른 단어를 입력하거나, <a href="/nearest1k/${puzzleNumber}">여기</a>에서 가장 유사한 1000개의 단어를 볼 수 있습니다.</p> <p><b>${getUpdateTimeHours()}:00</b>에 새로운 문제를 풀 수 있습니다.</p>`
+        const commonResponse = `정답 단어와 비슷한, <a href="/nearest1k/${puzzleNumber}">상위 1000개의 단어</a>를 확인해보세요.</p>`
         response += commonResponse;
-        response += `<input type="button" value="결과 복사하기" id="result" onclick="share()" class="button"><br />`
+        response += `<input type="button" value="기록 복사하기" id="result" onclick="share()" class="button"><br />`
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];
         response += `<br/>
-통계: <br/>
+        ${puzzleNumber + 1}번째 꼬맨틀은 오늘 밤 자정(한국 시간 기준)에 열립니다.<br/>
+<br/>
+<b>나의 플레이 기록</b>: <br/>
 <table>
-<tr><th>첫번째 게임 번호:</th><td>${stats['firstPlay']}</td></tr>
-<tr><th>게임 수:</th><td>${totalGames}</td></tr>
-<tr><th>정답:</th><td>${stats['wins']}</td></tr>
-<tr><th>연속 정답:</th><td>${stats['winStreak']}</td></tr>
-<tr><th>포기:</th><td>${stats['giveups']}</td></tr>
-<tr><th>도중 중단:</th><td>${stats['abandons']}</td></tr>
-<tr><th>총 추측 수:</th><td>${stats['totalGuesses']}</td></tr>
+<tr><th>가장 처음 풀었던 꼬맨틀 번호:</th><td>${stats['firstPlay']}</td></tr>
+<tr><th>도전한 게임 횟수:</th><td>${totalGames}</td></tr>
+<tr><th>정답 횟수:</th><td>${stats['wins']}</td></tr>
+<tr><th>연속 정답 횟수:</th><td>${stats['winStreak']}</td></tr>
+<tr><th>포기 횟수:</th><td>${stats['giveups']}</td></tr>
+<tr><th>지금까지 추측 단어 총 갯수:</th><td>${stats['totalGuesses']}</td></tr>
 </table>
 `;
         $('#response').innerHTML = response;

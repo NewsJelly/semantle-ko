@@ -57,7 +57,7 @@ function guessRow(similarity, oldGuess, percentile, guessNumber, guess) {
     let progress = "";
     let closeClass = "";
     if (similarity >= similarityStory.rest * 100 && percentile === '1000위 이상') {
-        percentileText = '<span class="weirdWord">????<span class="tooltiptext">이 단어는 사전에는 없지만, 데이터셋에 포함되어 있으며 1000위 이내입니다.</span></span>';
+        percentileText = '<span class="weirdWord">????<span class="tooltiptext">이 단어는 사전에는 없지만, 데이터셋에 포함되어 있으며 1,000위 이내입니다.</span></span>';
     }
     if (typeof percentile === 'number') {
             closeClass = "close";
@@ -87,7 +87,7 @@ function solveStory(guesses, puzzleNumber) {
     if (is_win) {
         guess_count += 1
         if (guess_count == 1) {
-            return `이럴 수가! 첫번째 추측에서 ${puzzleNumber}번째 꼬맨틀 정답 단어를 맞췄습니다!\nhttps://semantle-ko.newsjel.ly/`;
+            return `이럴 수가! 첫번째 추측에서 ${puzzleNumber}번째 꼬맨틀 정답 단어를 맞혔습니다!\nhttps://semantle-ko.newsjel.ly/`;
         }
     }
     if (guess_count == 0) {
@@ -184,15 +184,15 @@ let Semantle = (function() {
     async function init() {
         let yesterday = await getYesterday()
         $('#yesterday2').innerHTML = `어제의 정답 단어는 <b>"${yesterday}"</b>입니다.`;
-        $('#yesterday-nearest1k').innerHTML = `정답 단어와 비슷한, <a href="/nearest1k/${yesterdayPuzzleNumber}">유사도 기준 상위 1000개의 단어</a>를 확인할 수 있습니다.`;
+        $('#yesterday-nearest1k').innerHTML = `정답 단어와 비슷한, <a href="/nearest1k/${yesterdayPuzzleNumber}">유사도 기준 상위 1,000개의 단어</a>를 확인할 수 있습니다.`;
 
         try {
             similarityStory = await getSimilarityStory(puzzleNumber);
             $('#similarity-story').innerHTML = `
-            ${puzzleNumber}번째 꼬맨틀의 정답 단어를 맞춰보세요.<br/>
+            ${puzzleNumber}번째 꼬맨틀의 정답 단어를 맞혀보세요.<br/>
             정답 단어와 가장 유사한 단어의 유사도는 <b>${(similarityStory.top * 100).toFixed(2)}</b> 입니다.
             10번째로 유사한 단어의 유사도는 ${(similarityStory.top10 * 100).toFixed(2)}이고,
-            1000번째로 유사한 단어의 유사도는 ${(similarityStory.rest * 100).toFixed(2)} 입니다.`;
+            1,000번째로 유사한 단어의 유사도는 ${(similarityStory.rest * 100).toFixed(2)} 입니다.`;
         } catch {
             // we can live without this in the event that something is broken
         }
@@ -492,11 +492,11 @@ let Semantle = (function() {
         gameOver = true;
         let response;
         if (won) {
-            response = `<p><b>정답 단어를 맞추었습니다. ${guesses.length}번째 추측만에 정답을 맞췄네요!</b><br/>`;
+            response = `<p><b>정답 단어를 맞혔습니다. ${guesses.length}번째 추측만에 정답을 맞혔네요!</b><br/>`;
         } else {
             response = `<p><b>${guesses.length - 1}번째 추측에서 포기했습니다!</b><br/>`;
         }
-        const commonResponse = `정답 단어와 비슷한, <a href="/nearest1k/${puzzleNumber}">상위 1000개의 단어</a>를 확인해보세요.</p>`
+        const commonResponse = `정답 단어와 비슷한, <a href="/nearest1k/${puzzleNumber}">상위 1,000개의 단어</a>를 확인해보세요.</p>`
         response += commonResponse;
         response += `<input type="button" value="기록 복사하기" id="result" onclick="share()" class="button"><br />`
         const totalGames = stats['wins'] + stats['giveups'] + stats['abandons'];

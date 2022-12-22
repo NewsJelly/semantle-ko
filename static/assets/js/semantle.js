@@ -416,7 +416,7 @@ let Semantle = (function() {
     }
 
     function checkMedia() {
-        let darkMode = storage.getItem("darkMode") === 'true';
+        let darkMode = storage.getItem("darkMode") || 'true' === 'true';
         toggleDarkMode(darkMode);
     }
 

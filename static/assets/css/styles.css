@@ -307,6 +307,10 @@ footer {
   margin-top: 5em;
 }
 
+#embedim--snow {
+  display: none;
+}
+
 @media only screen and (max-width: 640px) {
 
   body,
@@ -386,4 +390,8 @@ body.dark #give-up-btn {
 
 body.dark .subtext {
   color: #aaaaaa;
+}
+
+body.dark #embedim--snow {
+  display: block;  
 }

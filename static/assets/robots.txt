@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Disallow: /nearest1k/

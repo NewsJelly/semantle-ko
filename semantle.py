@@ -58,6 +58,11 @@ def get_index():
     return render_template('index.html')
 
 
+@app.route('/robots.txt')
+def robots():
+    return send_file("static/assets/robots.txt")
+
+
 @app.route("/favicon.ico")
 def send_favicon():
     return send_file("static/assets/favicon.ico")

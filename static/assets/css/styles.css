@@ -392,6 +392,6 @@ body.dark .subtext {
   color: #aaaaaa;
 }
 
-body.dark #embedim--snow {
+body.dark.snow #embedim--snow {
   display: block;  
 }

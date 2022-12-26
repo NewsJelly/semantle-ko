@@ -420,6 +420,12 @@ let Semantle = (function() {
         toggleDarkMode(darkMode);
     }
 
+    function setSnowMode() {
+        let days = Math.floor(Date.now() / 1000 / 60 / 60 / 24)
+        let on = days % 3 === 0
+        document.body.classList[on ? 'add' : 'remove']('snow');
+    }
+
     function saveGame(guessCount, winState) {
         // If we are in a tab still open from yesterday, we're done here.
         // Don't save anything because we may overwrite today's game!
@@ -523,11 +529,13 @@ let Semantle = (function() {
     return {
         init: init,
         checkMedia: checkMedia,
+        setSnowMode: setSnowMode,
     };
 })();
 
 // do this when the file loads instead of waiting for DOM to be ready to avoid
 // a flash of unstyled content
 Semantle.checkMedia();
+Semantle.setSnowMode();
     
 window.addEventListener('load', async () => { Semantle.init() });

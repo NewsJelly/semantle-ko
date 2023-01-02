@@ -268,7 +268,7 @@ let Semantle = (function() {
                         'event_category' : 'game_event',
                         'event_label' : 'giveup',
                     });
-                    gtag('event', 'win', {
+                    gtag('event', 'giveup', {
                         'event_category' : 'game_event',
                         'event_label' : 'guess_count',
                         'value' : guessCount,

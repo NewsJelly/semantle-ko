@@ -202,6 +202,8 @@ input[type="button"] {
 }
 
 #guess-wrapper #guess {
+  color: black;
+  background-color: #eeeeee;
   width: 100%;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -379,6 +381,11 @@ body.dark .overlay-button {
 }
 
 body.dark #guess-wrapper #guess-btn {
+  color: #fafafa;
+  background-color: #333;
+}
+
+body.dark #guess-wrapper #guess {
   color: #fafafa;
   background-color: #333;
 }

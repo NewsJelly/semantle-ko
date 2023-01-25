@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,8 +13,8 @@
 
     <title>꼬맨틀 — 유사한 단어 목록</title>
     <link rel="stylesheet" href="/assets/css/modern-normalize.min.css">
-    <script src="/assets/js/nearest1k.js"></script>
-    
+    <script src="/assets/js/nearest1k.js?v=20230125"></script>
+
     <link rel="icon" href="/assets/favicon.ico" sizes="any">
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -23,37 +24,39 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y0ED7GGKGN"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
 
         gtag('config', 'G-Y0ED7GGKGN');
     </script>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="warning" style="display:none; ">
-      <div style="border:thin solid black; background-color: #ffdddd">
-        조심하세요! 이 경고문을 클릭하면 <span id="spoiler"></span>의 정답이 표시됩니다.
-      </div>
+        <div style="border:thin solid black; background-color: #ffdddd">
+            조심하세요! 이 경고문을 클릭하면 <span id="spoiler"></span>의 정답이 표시됩니다.
+        </div>
     </div>
     <div id="nearest" style="display:none;">
-      꼬맨틀 <b id="day">#{{day}}</b>의 정답은 <b id="word">{{word}}</b>입니다. 가장 유사한 단어는 다음과 같습니다:
-      <table >
-        <tr>
-          <th>유사도 순위</th>
-          <th>단어</th>
-          <th>유사도</th>
-        </tr>
-        {% for word in words %}
-        <tr>
-          <td> {{word['rank']}}</td>
-          <td> {{word['word']}}</td>
-          <td> {{word['similarity']}}</td>
-        </tr>
-        {% endfor %}
-      </table>
+        꼬맨틀 <b id="day">#{{day}}</b>의 정답은 <b id="word">{{word}}</b>입니다. 가장 유사한 단어는 다음과 같습니다:
+        <table>
+            <tr>
+                <th>유사도 순위</th>
+                <th>단어</th>
+                <th>유사도</th>
+            </tr>
+            {% for word in words %}
+            <tr>
+                <td> {{word['rank']}}</td>
+                <td> {{word['word']}}</td>
+                <td> {{word['similarity']}}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 
-    <br/>
+    <br />
     <a href="/">메인 페이지로 돌아가기</a>
-  </body>
+</body>
+
 </html>

@@ -305,6 +305,21 @@ ul {
   visibility: visible;
 }
 
+.give-up-btn-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.give-up-btn-wrapper .bottom-banner {
+  display: block;
+  width: 100%;
+  margin-left: 8px;
+  font-size: 0;
+  background: url(/assets/banner-image.png) center no-repeat no-repeat;
+  background-size: cover;
+}
+
 footer {
   margin-top: 5em;
 }

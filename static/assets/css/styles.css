@@ -4,7 +4,9 @@
   box-sizing: border-box;
 }
 
-b, strong, th {
+b,
+strong,
+th {
   font-weight: 600;
 }
 
@@ -316,6 +318,7 @@ ul {
   width: 100%;
   margin-left: 8px;
   font-size: 0;
+  text-decoration: none;
   background: url(/assets/banner-image.png) center no-repeat no-repeat;
   background-size: cover;
 }
@@ -415,5 +418,5 @@ body.dark .subtext {
 }
 
 body.dark.snow #embedim--snow {
-  display: block;  
+  display: block;
 }

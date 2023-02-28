@@ -536,6 +536,6 @@ let Semantle = (function() {
 // do this when the file loads instead of waiting for DOM to be ready to avoid
 // a flash of unstyled content
 Semantle.checkMedia();
-Semantle.setSnowMode();
+// Semantle.setSnowMode();
     
 window.addEventListener('load', async () => { Semantle.init() });

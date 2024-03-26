@@ -30,7 +30,7 @@ def blocks(files, size=65536):
         yield b
 
 def count_lines(filepath):
-    with open(filepath, "r", encoding="utf-8", errors='ignore') as f:
+    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
         return sum(bl.count("\n") for bl in tqdm(blocks(f), desc='Counting lines', mininterval=1))
 
 

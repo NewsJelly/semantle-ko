@@ -75,8 +75,9 @@ def send_static(path):
 
 @app.route('/guess/<int:day>/<string:word>')
 def get_guess(day: int, word: str):
-    print(app.secrets[day])
-    if app.secrets[day].lower() == word.lower():
+    # print(app.secrets[day])
+    # remove lower(), unnecessary to korean
+    if app.secrets[day] == word:
         word = app.secrets[day]
     rtn = {"guess": word}
     # check most similar

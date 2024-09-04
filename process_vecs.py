@@ -30,7 +30,7 @@ def blocks(files, size=65536):
         yield b
 
 def count_lines(filepath):
-    with open(filepath, "r", encoding="utf-8", errors='ignore') as f:
+    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
         return sum(bl.count("\n") for bl in tqdm(blocks(f), desc='Counting lines', mininterval=1))
 
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     normal_words = load_dic('data/ko-aff-dic-0.7.92/ko_filtered.txt')
     print("# words in dictionary:", len(normal_words))
     valid_nearest = []
-    valid_nearest_mat = None
+    valid_nearest_mat = []
     eliminated = 0
     checked_words = set()
     total_lines = count_lines('data/cc.ko.300.vec') - 1
@@ -61,10 +61,7 @@ if __name__ == '__main__':
                 vec = array([float(w1) for w1 in words[1:]])
                 if word in normal_words:
                     valid_nearest.append(word)
-                    if valid_nearest_mat is None:
-                        valid_nearest_mat = [vec]
-                    else:
-                        valid_nearest_mat.append(vec)
+                    valid_nearest_mat.append(vec)
                 cursor.execute("""INSERT INTO guesses values (?, ?)""", (word, pickle.dumps(vec)))
             checked_words.add(word)
             if n % 100000 == 0:
